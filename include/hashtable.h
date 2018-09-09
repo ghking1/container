@@ -16,22 +16,23 @@ typedef struct _HashTableElement
 
 typedef struct _HashTable
 {
-    HashTableElement **table;
-    size_t bucket_size;
-    size_t size;
+    HashTableElement **bucket;  //bucket is point to an array of (HashTableElement*)
+    size_t bucket_size;         //size of bucket
+    size_t size;                //size of elements
 } HashTable;
 
-bool init_HashTable(HashTable *, size_t);
-bool clear_HashTable(HashTable *);
-bool destroy_HashTable(HashTable *);
-bool isEmpty_HashTable(const HashTable *);
-size_t getSize_HashTable(const HashTable *);
+bool init_HashTable(HashTable *, size_t);       //initial it, successfully return true, failed return false
+bool clear_HashTable(HashTable *);              //clear all element in it
+bool destroy_HashTable(HashTable *);            //destroy it
+bool isEmpty_HashTable(const HashTable *);      //is empty return true, else return false
+size_t getSize_HashTable(const HashTable *);    //return size of elements
 
-HashTableElement* get_HashTable(const HashTable *, const char *);
-HashTableElement* set_HashTable(HashTable *, const char *, void *);
-void* delete_HashTable(HashTable *, const char *);
+HashTableElement* get_HashTable(const HashTable *, const char *);    //get element by key
+HashTableElement* set_HashTable(HashTable *, const char *, void *);  //set element by key
+void* delete_HashTable(HashTable *, const char *);                   //delete element by key
 
-void traverse_HashTable(HashTable *, bool (*)(const HashTableElement*));
+//handler function receive a HashTableElement point, and return true when it want to break
+void traverse_HashTable(HashTable *, bool (*)(const HashTableElement*));  //traverse element one by one, but it is not same to insert sequence
 
 #undef bool
 
