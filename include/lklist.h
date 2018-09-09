@@ -25,7 +25,6 @@ bool init_LkList(LkList *);				//initial it, successfully return true, failed re
 bool clear_LkList(LkList *);				//clear all element in it
 bool destroy_LkList(LkList *);				//destroy it
 bool isEmpty_LkList(const LkList *);			//is empty return true, else return false
-
 size_t getSize_LkList(const LkList *);			//return size of elements
 
 LkListElement* getBegin_LkList(const LkList *);																		//return first element of it
@@ -33,7 +32,7 @@ LkListElement* getEnd_LkList(const LkList *);																		//return last ele
 LkListElement* getPrior_LkList(const LkList *, const LkListElement *);											//return priorElemet of it
 LkListElement* getNext_LkList(const LkList *, const LkListElement *);											//return nextElement of it
 LkListElement* getByNum_LkList(const LkList *, size_t);													//get element by number
-LkListElement* getByVal_LkList(const LkList *, const void *, int (*)(const void*, const void*));	//get element by value	
+LkListElement* getByVal_LkList(const LkList *, const void *, int (const *)(const void*, const void*));	//get element by value	
 
 LkListElement* insert_LkList(LkList *, const LkListElement *, const void *);							//insert before current element
 void * delete_LkList(LkList *, const LkListElement *);														//delete current element, return valuePoint of it

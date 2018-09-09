@@ -1,9 +1,8 @@
 #ifndef SQLIST_H
 #define SQLIST_H
 
-
-#include "container.h"
 #include <stddef.h>
+#include "container.h"
 
 #define bool int
 
@@ -19,21 +18,21 @@ typedef struct _SqList
 	size_t capacity;		//size of space
 } SqList;
 
+bool setCapacity_SqList(SqList *, size_t);      //set size of space
+size_t getCapacity_SqList(const SqList *);      //return size of space
+
 bool init_SqList(SqList *);				//initial it, successfully return true, failed return false
 bool clear_SqList(SqList *);				//clear all element in it
 bool destroy_SqList(SqList *);			//destroy it
 bool isEmpty_SqList(const SqList *);			//is empty return true, else return false
-
-bool setCapacity_SqList(SqList *, size_t);		//set size of space
-size_t getSize_SqList(const SqList *);			//return size of elements
-size_t getCapacity_SqList(const SqList *);		//return size of space
+size_t getSize_SqList(const SqList *);          //return size of elements
 
 SqListElement* getBegin_SqList(const SqList *);																		//return first element of it
 SqListElement* getEnd_SqList(const SqList *);																		//return last element of it
 SqListElement* getPrior_SqList(const SqList *, const SqListElement *);											//return priorElemet of it
 SqListElement* getNext_SqList(const SqList *, const SqListElement *);											//return nextElement of it
 SqListElement* getByNum_SqList(const SqList *, size_t);													//get element by number
-SqListElement* getByVal_SqList(const SqList *, const void *, int (*)(const void*, const void*));	//get element by value	
+SqListElement* getByVal_SqList(const SqList *, const void *, int (const *)(const void*, const void*));	//get element by value	
 
 SqListElement* insert_SqList(SqList *, const SqListElement *, const void *);							//insert before current element
 void * delete_SqList(SqList *, const SqListElement *);														//delete current element, return valuePobool of it

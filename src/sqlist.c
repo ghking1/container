@@ -1,5 +1,5 @@
-#include "sqlist.h"
 #include <stdlib.h>
+#include "../include/sqlist.h"
 
 #define CAPACITY_DEFAULT 8
 #define CAPACITY_LINE_1 128
@@ -10,7 +10,6 @@
 #define true 1
 #define false 0
 
-
 /*
  *adjust capacity of SqList, if appoint newCapacity==0 the newCapacity will be caculate autoly, otherwise it will use it directly
  */
@@ -18,7 +17,7 @@ bool reAllocate(SqList* L, size_t newCapacity)
 {
 	if(L==NULL)	//L==NULL, is invalid
 	{
-		return false;
+		return false;   
 	}	
 
 	if(newCapacity==0)								//if appoint newCapacity==0 the newCapacity will be caculate autoly
@@ -59,15 +58,15 @@ bool reAllocate(SqList* L, size_t newCapacity)
  */
 bool init_SqList(SqList *L)				
 {
-	if(L==NULL)	//L==NULL, is invalid
+	if (L == NULL)	//L==NULL, is invalid
 	{
 		return false;
-	}	
+	}
 
-	L->begin=NULL;					//initial SqList
-	L->end=NULL;
-	L->capacity=0;
-
+	L->begin    = NULL;					//initial SqList
+	L->end      = NULL;
+	L->capacity = 0;
+	
 	reAllocate(L, 0);				//allocate space for it originally
 
 	return true;
@@ -97,7 +96,7 @@ bool destroy_SqList(SqList *L)
 	}	
 
 	free(L->begin);					//free memory
-
+	
 	L->begin=NULL;					//set SqList uninitialed
 	L->end=NULL;
 	L->capacity=0;
@@ -383,7 +382,6 @@ void * popFront_SqList(SqList *L)
 {
 	return delete_SqList(L, L->begin);
 }
-
 
 /*
  *pop back

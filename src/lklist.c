@@ -1,5 +1,5 @@
-#include "lklist.h"
 #include <stdlib.h>
+#include "../include/lklist.h"
 
 #define bool int
 #define true 1
@@ -282,7 +282,7 @@ LkListElement* insert_LkList(LkList *L, const LkListElement *current, const void
 /*
  *delete current element, return valuePoint of it
  */
-void * delete_LkList(LkList *L, const LkListElement *current)
+void* delete_LkList(LkList *L, const LkListElement *current)
 {
 	if(L==NULL || current==NULL)		//NULL, is invalid
    	{ 
