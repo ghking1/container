@@ -7,9 +7,12 @@
 #define true 1
 #define false 0
 
+/*
+ *bucket_size must >=1
+ */
 bool init_HashTable(HashTable *T, size_t bucket_size)
 {
-    if(T==NULL)
+    if(T==NULL || bucket_size<1)
     {
         return false;
     }
@@ -26,6 +29,10 @@ bool init_HashTable(HashTable *T, size_t bucket_size)
     return true;
 }
 
+
+/*
+ *clear all element in hashtable, you must handle all valuepoint in it yourself before clear it
+ */
 bool clear_HashTable(HashTable *T)
 {
     if(T==NULL)
@@ -53,6 +60,10 @@ bool clear_HashTable(HashTable *T)
     return true;
 }
 
+
+/*
+ *destroy hashtable, you must handle all valuepoint in it yourself before clear it
+ */
 bool destroy_HashTable(HashTable *T)
 {
     if(T==NULL)
@@ -70,6 +81,10 @@ bool destroy_HashTable(HashTable *T)
     return true;
 }
 
+
+/*
+ *return true if it is empty
+ */
 bool isEmpty_HashTable(const HashTable *T)
 {
     if(T==NULL)
@@ -80,6 +95,10 @@ bool isEmpty_HashTable(const HashTable *T)
     return T->size == 0 ? true : false;
 }
 
+
+/*
+ *return size of it
+ */
 size_t getSize_HashTable(const HashTable *T)
 {
     if(T==NULL)
@@ -90,6 +109,10 @@ size_t getSize_HashTable(const HashTable *T)
     return T->size;
 }
 
+
+/*
+ *caculate str hash 
+ */
 size_t BKDRHash(const char *S)
 {
     size_t hash=0;
@@ -101,6 +124,10 @@ size_t BKDRHash(const char *S)
     }
 }
 
+
+/*
+ *get hashelement by key
+ */
 HashTableElement* get_HashTable(const HashTable *T, const char *K)
 {
     if(T==NULL || K==NULL)
@@ -123,6 +150,10 @@ HashTableElement* get_HashTable(const HashTable *T, const char *K)
     return current;
 }
 
+
+/*
+ *set hashvalue by key
+ */
 HashTableElement* set_HashTable(HashTable *T, const char *K, void *valuePoint)
 {
     if(T==NULL || K==NULL)
@@ -161,6 +192,10 @@ HashTableElement* set_HashTable(HashTable *T, const char *K, void *valuePoint)
     }
 }
 
+
+/*
+ *delete hashelement by key
+ */
 void* delete_HashTable(HashTable *T, const char *K)
 {
     if(T==NULL || K==NULL)
@@ -203,6 +238,10 @@ void* delete_HashTable(HashTable *T, const char *K)
     }
 }
 
+
+/*
+ *traverse hashelement one by one, and handle it with handler callback function
+ */
 void traverse_HashTable(HashTable *T, bool (*handler)(const HashTableElement*))
 {
     if(T==NULL)

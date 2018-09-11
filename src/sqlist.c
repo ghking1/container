@@ -74,7 +74,7 @@ bool init_SqList(SqList *L)
 
 
 /*
- *clear all element in it
+ *clear all element in it, you must handle all valuepoint in it yourself before clear it
  */
 bool clear_SqList(SqList *L)                
 {
@@ -89,6 +89,9 @@ bool clear_SqList(SqList *L)
 }
 
 
+/*
+ *destroy it, you must handle all valuepoint in it yourself before clear it
+ */
 bool destroy_SqList(SqList *L)
 {
     if(L==NULL)    //L==NULL, is invalid

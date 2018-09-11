@@ -34,7 +34,7 @@ bool init_LkList(LkList *L)
 
 
 /*
- *clear all element in it
+ *clear all element in it, you must handle all valuepoint in it yourself before clear it
  */
 bool clear_LkList(LkList *L)                
 {
@@ -59,7 +59,7 @@ bool clear_LkList(LkList *L)
 
 
 /*
- *destroy it
+ *destroy it, you must handle all valuepoint in it yourself before clear it
  */
 bool destroy_LkList(LkList *L)                
 {
