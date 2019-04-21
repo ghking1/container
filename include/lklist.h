@@ -32,7 +32,7 @@ LkListElement* getEnd_LkList(const LkList *);                                   
 LkListElement* getPrior_LkList(const LkList *, const LkListElement *);                                  //return priorElemet of it
 LkListElement* getNext_LkList(const LkList *, const LkListElement *);                                   //return nextElement of it
 LkListElement* getByNum_LkList(const LkList *, size_t);                                                 //get element by number
-LkListElement* getByVal_LkList(const LkList *, const void *, int (const *)(const void*, const void*));  //get element by value    
+LkListElement* getByVal_LkList(const LkList *, const void *, int (*)(const void*, const void*));  //get element by value    
 
 LkListElement* insert_LkList(LkList *, const LkListElement *, const void *);   //insert before current element
 void * delete_LkList(LkList *, const LkListElement *);                         //delete current element, return valuePoint of it

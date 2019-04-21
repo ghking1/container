@@ -32,7 +32,7 @@ SqListElement* getEnd_SqList(const SqList *);                                   
 SqListElement* getPrior_SqList(const SqList *, const SqListElement *);                                  //return priorElemet of it
 SqListElement* getNext_SqList(const SqList *, const SqListElement *);                                   //return nextElement of it
 SqListElement* getByNum_SqList(const SqList *, size_t);                                                 //get element by number
-SqListElement* getByVal_SqList(const SqList *, const void *, int (const *)(const void*, const void*));  //get element by value    
+SqListElement* getByVal_SqList(const SqList *, const void *, int (*)(const void*, const void*));  //get element by value    
 
 SqListElement* insert_SqList(SqList *, const SqListElement *, const void *);  //insert before current element
 void * delete_SqList(SqList *, const SqListElement *);                        //delete current element, return valuePobool of it
