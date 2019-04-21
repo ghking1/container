@@ -1,2 +1,5 @@
 language: c
 
+script:
+  - cd test
+  - make
