@@ -10,20 +10,23 @@
  */
 bool init_LkList(LkList *L)                
 {
+    LkListElement *pHead= NULL;
+    LkListElement *pend= NULL;    
+
     if(L==NULL)    //L==NULL, is invalid
     { 
         return false;
     }    
 
-    LkListElement *pHead=(LkListElement*)malloc(sizeof(LkListElement));   //allocate head and initial it
-    LkListElement *pend=(LkListElement*)malloc(sizeof(LkListElement));    //allocate end and initial it
+    pHead = (LkListElement*)malloc(sizeof(LkListElement));  //allocate head and initial it
+    pEnd = (LkListElement*)malloc(sizeof(LkListElement));   //allocate end and initial it
+
     pHead->valuePoint=NULL;
     pHead->prior=NULL;
     pHead->next=pend;
-    pend->valuePoint=NULL;
-    pend->prior=pHead;
-    pend->next=NULL;
-
+    pEnd->valuePoint=NULL;
+    pEnd->prior=pHead;
+    pEnd->next=NULL;
 
     L->head=pHead;
     L->end=pend;
@@ -38,12 +41,13 @@ bool init_LkList(LkList *L)
  */
 bool clear_LkList(LkList *L)                
 {
+    LkListElement *previous=NULL, *current=NULL;//release all element excluding head and end
+
     if(L==NULL)    //L==NULL, is invalid
     { 
         return false;
     }    
 
-    LkListElement *previous=NULL, *current=NULL;//release all element excluding head and end
     for(current=L->head->next; current!=L->end; /*none*/)
     {
         previous=current;
@@ -170,7 +174,7 @@ LkListElement* getPrior_LkList(const LkList *L, const LkListElement *current)
 LkListElement* getNext_LkList(const LkList *L, const LkListElement *current)                                            
 {
     if(L==NULL)    //NULL, is invalid
-       { 
+    { 
         return NULL;
     }    
 
@@ -190,6 +194,9 @@ LkListElement* getNext_LkList(const LkList *L, const LkListElement *current)
  */
 LkListElement* getByNum_LkList(const LkList *L, const size_t number)                                                    
 {
+    LkListElement *p=L->head;   //locate the element
+    size_t i=0;
+
     if(L==NULL)    //L==NULL is invalid or number is not in range
     { 
         return NULL;
@@ -200,8 +207,6 @@ LkListElement* getByNum_LkList(const LkList *L, const size_t number)
         return L->end;
     }
 
-    LkListElement *p=L->head;   //locate the element
-    size_t i=0;
     while(i<number)
     {
         p=p->next;
@@ -217,8 +222,10 @@ LkListElement* getByNum_LkList(const LkList *L, const size_t number)
  */
 LkListElement* getByVal_LkList(const LkList *L, const void *valuePoint, int (*compare)(const void *valuePoint1, const void *valuePoint2))
 {
+    LkListElement *p=NULL;
+
     if(L==NULL)    //NULL, is invalid
-       { 
+    { 
         return NULL;
     }    
 
@@ -227,7 +234,6 @@ LkListElement* getByVal_LkList(const LkList *L, const void *valuePoint, int (*co
         return L->end;
     }
 
-    LkListElement *p=NULL;
     for(p=L->head->next; p!=L->end; p=p->next)       //find from first element
     {
         if(compare(p->valuePoint, valuePoint)==0)    //equals then stop
@@ -246,8 +252,10 @@ LkListElement* getByVal_LkList(const LkList *L, const void *valuePoint, int (*co
  */
 LkListElement* insert_LkList(LkList *L, const LkListElement *current, const void *valuePoint)
 {
+    LkListElement *p = NULL;
+
     if(L==NULL )    //NULL, is invalid
-       { 
+    { 
         return NULL;
     }    
     
@@ -256,7 +264,7 @@ LkListElement* insert_LkList(LkList *L, const LkListElement *current, const void
         return L->end;
     }
 
-    LkListElement *p=(LkListElement *)malloc(sizeof(LkListElement));
+    p=(LkListElement *)malloc(sizeof(LkListElement));
     if(p==NULL)
     {
         exit(ALLOCATE_MEMORY_ERROR);
@@ -280,12 +288,12 @@ LkListElement* insert_LkList(LkList *L, const LkListElement *current, const void
  */
 void* delete_LkList(LkList *L, const LkListElement *current)
 {
+    void *valuePoint=current->valuePoint;    //save valuePoint
+
     if(L==NULL || current==NULL)   //NULL, is invalid
-       { 
+    { 
         return NULL;
     }    
-
-    void *valuePoint=current->valuePoint;    //save valuePoint
 
     LkListElement *cur=(LkListElement *)current;    //const point transmit to normal point
     cur->prior->next=current->next;        //change points

@@ -10,6 +10,8 @@
  */
 bool init_HashTable(HashTable *T, const size_t bucket_size)
 {
+    int i;
+
     if(T==NULL || bucket_size<1)
     {
         return false;
@@ -19,7 +21,6 @@ bool init_HashTable(HashTable *T, const size_t bucket_size)
     T->size=0;
     T->bucket=(HashTableElement**)malloc(sizeof(HashTableElement*)*bucket_size);
 
-    int i;
     for(i=0; i<bucket_size; ++i)
     {
         T->bucket[i]=NULL;  //all bucket has no element when init
@@ -33,12 +34,13 @@ bool init_HashTable(HashTable *T, const size_t bucket_size)
  */
 bool clear_HashTable(HashTable *T)
 {
+    int i;
+
     if(T==NULL)
     {
         return false;
     }
 
-    int i;
     for(i=0; i<T->bucket_size; ++i)
     {
         if(T->bucket[i]!=NULL)
@@ -115,6 +117,7 @@ size_t BKDRHash(const char *S)
 {
     size_t hash=0;
     size_t c;
+
     while(c=(size_t)*S++)
     {
         hash = hash*131 + c;   
@@ -128,13 +131,14 @@ size_t BKDRHash(const char *S)
  */
 HashTableElement* get_HashTable(const HashTable *T, const char *K)
 {
+    size_t index = BKDRHash(K) % T->bucket_size;
+    HashTableElement *current=NULL;
+
     if(T==NULL || K==NULL)
     {
         return false;
     }
 
-    size_t index = BKDRHash(K) % T->bucket_size;
-    HashTableElement *current=NULL;
     if(T->bucket[index]!=NULL)  //search the key mapped bucket by strcmp
     {
         for(current=T->bucket[index]; current!=NULL; current=current->next)
@@ -154,13 +158,15 @@ HashTableElement* get_HashTable(const HashTable *T, const char *K)
  */
 HashTableElement* set_HashTable(HashTable *T, const char *K, void *valuePoint)
 {
+    size_t index = BKDRHash(K) % T->bucket_size;
+    HashTableElement *current = NULL;
+    HashTableElement *E = NULL;
+
     if(T==NULL || K==NULL)
     {
         return false;
     }
 
-    size_t index = BKDRHash(K) % T->bucket_size;
-    HashTableElement *current=NULL;
     if(T->bucket[index]!=NULL)
     {
         for(current=T->bucket[index]; current!=NULL; current=current->next)
@@ -179,7 +185,7 @@ HashTableElement* set_HashTable(HashTable *T, const char *K, void *valuePoint)
     }
     else               //create new HashTableElement
     {
-        HashTableElement *E=(HashTableElement*)malloc(sizeof(HashTableElement));
+        E=(HashTableElement*)malloc(sizeof(HashTableElement));
         E->key=(char*)malloc(sizeof(char)*strlen(K));
         strcpy(E->key, K);          //use key copy, but not reference
         E->valuePoint=valuePoint;   
@@ -196,13 +202,15 @@ HashTableElement* set_HashTable(HashTable *T, const char *K, void *valuePoint)
  */
 void* delete_HashTable(HashTable *T, const char *K)
 {
+    size_t index = BKDRHash(K) % T->bucket_size;
+    HashTableElement *previous=NULL, *current=NULL;
+    void *valuePoint = NULL;
+
     if(T==NULL || K==NULL)
     {
         return false;
     }
 
-    size_t index = BKDRHash(K) % T->bucket_size;
-    HashTableElement *previous=NULL, *current=NULL;
     if(T->bucket[index]!=NULL)
     {
         for(current=T->bucket[index]; current!=NULL; /*none*/)
@@ -218,7 +226,7 @@ void* delete_HashTable(HashTable *T, const char *K)
 
     if(current!=NULL)
     {
-        void *valuePoint=current->valuePoint;
+        valuePoint=current->valuePoint;
         if(previous!=NULL)  //finded element not in the first place
         {
             previous->next=current->next;
@@ -242,13 +250,14 @@ void* delete_HashTable(HashTable *T, const char *K)
  */
 void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(const HashTableElement *valuePoint))
 {
+    int i;
+    bool stop;
+
     if(T==NULL)
     {
         return;
     }
 
-    int i;
-    bool stop;
     for(i=0; i<T->bucket_size; ++i)
     {
         if(T->bucket[i]!=NULL)

@@ -15,6 +15,8 @@
  */
 bool reAllocate(SqList* L, const size_t newCapacity)
 {
+    size_t size=(L->end)-(L->begin);                //caculate size and save it
+
     if(L==NULL)    //L==NULL, is invalid
     {
         return false;   
@@ -40,7 +42,6 @@ bool reAllocate(SqList* L, const size_t newCapacity)
         }
     }
     
-    size_t size=(L->end)-(L->begin);                //caculate size and save it
     L->begin=(void *)realloc(L->begin, newCapacity*sizeof(SqListElement));    //relloc new memory space
     if(L->begin == NULL)     //if relloc failed exit
     {
@@ -218,7 +219,7 @@ SqListElement* getEnd_SqList(const SqList *L)
 SqListElement* getPrior_SqList(const SqList *L, const SqListElement *current)                                            
 {
     if(L==NULL)    //NULL, is invalid
-       { 
+    { 
         return NULL;
     }    
 
@@ -280,8 +281,10 @@ SqListElement* getByNum_SqList(const SqList *L, const size_t number)
  */
 SqListElement* getByVal_SqList(const SqList *L, const void *valuePoint, int (*compare)(const void *valuepoint1, const void *valuepoint2))
 {
+    SqListElement *p=NULL;
+
     if(L==NULL)    //NULL, is invalid
-       { 
+    { 
         return NULL;
     }    
 
@@ -290,7 +293,6 @@ SqListElement* getByVal_SqList(const SqList *L, const void *valuePoint, int (*co
         return L->end;
     }
 
-    SqListElement *p=NULL;
     for(p=L->begin ; p!=L->end; ++p)    //search from L->begin
     {
         if(compare(p->valuePoint, valuePoint)==0)    //when two value equals, stop!
@@ -308,8 +310,9 @@ SqListElement* getByVal_SqList(const SqList *L, const void *valuePoint, int (*co
  */
 SqListElement* insert_SqList(SqList *L, const SqListElement *current, const void *valuePoint)
 {
+    SqListElement *p=NULL;                    
     if(L==NULL)    //NULL, is invalid
-       { 
+    { 
         return NULL;
     }    
 
@@ -325,8 +328,8 @@ SqListElement* insert_SqList(SqList *L, const SqListElement *current, const void
             return NULL;
         }
     }
-    
-    SqListElement *p=NULL;                    //move all elements after current back, including current
+
+    //move all elements after current back, including current
     for(p=L->end; p!=current; --p)
     {
         *p=*(p-1);
@@ -344,14 +347,15 @@ SqListElement* insert_SqList(SqList *L, const SqListElement *current, const void
  */
 void* delete_SqList(SqList *L, const SqListElement *current)    
 {
+    void *valuePoint=current->valuePoint;    //save valuePoint 
+    SqListElement *p=NULL;                    
+
     if(L==NULL || (L->end)-(L->begin)==0 || current==NULL)   //NULL, is invalid
-       { 
+    { 
         return NULL;
     }    
 
-    void *valuePoint=current->valuePoint;    //save valuePoint 
-
-    SqListElement *p=NULL;                    //move all elements after current forward, excluding current
+    //move all elements after current forward, excluding current
     for(p=(SqListElement*)current; p!=L->end-1; ++p)    //here need do an force type transform: from const to normal!
     {
         *p=*(p+1);
