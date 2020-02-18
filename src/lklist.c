@@ -188,7 +188,7 @@ LkListElement* getNext_LkList(const LkList *L, const LkListElement *current)
 /*
  *get element by number
  */
-LkListElement* getByNum_LkList(const LkList *L, size_t number)                                                    
+LkListElement* getByNum_LkList(const LkList *L, const size_t number)                                                    
 {
     if(L==NULL)    //L==NULL is invalid or number is not in range
     { 
@@ -215,7 +215,7 @@ LkListElement* getByNum_LkList(const LkList *L, size_t number)
 /*
  *get element by value
  */
-LkListElement* getByVal_LkList(const LkList *L, const void *valuePoint, int (*compare)(const void*, const void*))
+LkListElement* getByVal_LkList(const LkList *L, const void *valuePoint, int (*compare)(const void *valuePoint1, const void *valuePoint2))
 {
     if(L==NULL)    //NULL, is invalid
        { 
@@ -320,7 +320,7 @@ LkListElement* pushBack_LkList(LkList *L, const void *valuePoint)
 /*
  *pop front
  */
-void * popFront_LkList(LkList *L)    
+void* popFront_LkList(LkList *L)    
 {    
     return delete_LkList(L, L->head->next);
 }
@@ -328,7 +328,7 @@ void * popFront_LkList(LkList *L)
 /*
  *pop back
  */
-void * popBack_LkList(LkList *L)                                                                                        
+void* popBack_LkList(LkList *L)                                                                                        
 {
     return delete_LkList(L, L->end->prior);
 }

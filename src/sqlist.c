@@ -13,7 +13,7 @@
 /*
  *adjust capacity of SqList, if appoint newCapacity==0 the newCapacity will be caculate autoly, otherwise it will use it directly
  */
-bool reAllocate(SqList* L, size_t newCapacity)
+bool reAllocate(SqList* L, const size_t newCapacity)
 {
     if(L==NULL)    //L==NULL, is invalid
     {
@@ -126,7 +126,7 @@ bool isEmpty_SqList(const SqList *L)
 /*
  *set new size of space
  */
-bool setCapacity_SqList(SqList *L, size_t newCapacity)
+bool setCapacity_SqList(SqList *L, const size_t newCapacity)
 {
     if(L==NULL || newCapacity<(L->end)-(L->begin))    //L==NULL is invalid, newCapacity < size may cause lost of data
     {
@@ -257,7 +257,7 @@ SqListElement* getNext_SqList(const SqList *L, const SqListElement *current)
 /*
  *get element by number
  */
-SqListElement* getByNum_SqList(const SqList *L, size_t number)
+SqListElement* getByNum_SqList(const SqList *L, const size_t number)
 {
     if(L==NULL)    //L==NULL, is invalid
     {
@@ -278,7 +278,7 @@ SqListElement* getByNum_SqList(const SqList *L, size_t number)
 /*
  *get element by value
  */
-SqListElement* getByVal_SqList(const SqList *L, const void *valuePoint, int (*compare)(const void*, const void*))
+SqListElement* getByVal_SqList(const SqList *L, const void *valuePoint, int (*compare)(const void *valuepoint1, const void *valuepoint2))
 {
     if(L==NULL)    //NULL, is invalid
        { 
@@ -342,7 +342,7 @@ SqListElement* insert_SqList(SqList *L, const SqListElement *current, const void
 /*
  *delete current element, return valuePoint of it
  */
-void * delete_SqList(SqList *L, const SqListElement *current)    
+void* delete_SqList(SqList *L, const SqListElement *current)    
 {
     if(L==NULL || (L->end)-(L->begin)==0 || current==NULL)   //NULL, is invalid
        { 
@@ -383,7 +383,7 @@ SqListElement* pushBack_SqList(SqList *L, const void *valuePoint)
 /*
  *pop front
  */
-void * popFront_SqList(SqList *L)
+void* popFront_SqList(SqList *L)
 {
     return delete_SqList(L, L->begin);
 }
@@ -392,7 +392,7 @@ void * popFront_SqList(SqList *L)
 /*
  *pop back
  */
-void * popBack_SqList(SqList *L)
+void* popBack_SqList(SqList *L)
 {
     return delete_SqList(L, L->end-1);
 }

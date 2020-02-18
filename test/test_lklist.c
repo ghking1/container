@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../include/lklist.h"
 
-int compare(const void*a, const void*b)
+int lklist_compare(const void*a, const void*b)
 {
     if(*(int*)a == *(int*)b)
     {
@@ -13,7 +13,7 @@ int compare(const void*a, const void*b)
     }
 }
 
-int main()
+int test_lklist()
 {
     LkList l;
     init_LkList(&l);
@@ -51,7 +51,7 @@ int main()
     p=getByNum_LkList(&l, 2);
     printf("%d\n", *(int*)p->valuePoint);
 
-    p=getByVal_LkList(&l, &a, compare);
+    p=getByVal_LkList(&l, &a, lklist_compare);
     printf("%d\n", *(int*)p->valuePoint);
 
     destroy_LkList(&l);

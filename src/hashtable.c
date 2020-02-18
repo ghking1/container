@@ -1,6 +1,4 @@
-
 #include <stdlib.h>
-#include <string.h>
 #include "../include/hashtable.h"
 
 #define bool int
@@ -10,7 +8,7 @@
 /*
  *bucket_size must >=1
  */
-bool init_HashTable(HashTable *T, size_t bucket_size)
+bool init_HashTable(HashTable *T, const size_t bucket_size)
 {
     if(T==NULL || bucket_size<1)
     {
@@ -242,7 +240,7 @@ void* delete_HashTable(HashTable *T, const char *K)
 /*
  *traverse hashelement one by one, and handle it with handler callback function
  */
-void traverse_HashTable(HashTable *T, bool (*handler)(const HashTableElement*))
+void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(const HashTableElement *valuePoint))
 {
     if(T==NULL)
     {

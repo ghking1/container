@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../include/sqlist.h"
 
-int compare(const void*a, const void*b)
+int sqlist_compare(const void*a, const void*b)
 {
     if(*(int*)a == *(int*)b)
     {
@@ -13,7 +13,7 @@ int compare(const void*a, const void*b)
     }
 }
 
-int main()
+int test_sqlist()
 {
     SqList l;
     init_SqList(&l);
@@ -51,7 +51,7 @@ int main()
     p=getByNum_SqList(&l, 2);
     printf("%d\n", *(int*)p->valuePoint);
 
-    p=getByVal_SqList(&l, &a, compare);
+    p=getByVal_SqList(&l, &a, sqlist_compare);
     printf("%d\n", *(int*)p->valuePoint);
 
 

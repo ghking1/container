@@ -7,7 +7,7 @@ int print_hash_element(const HashTableElement *E)
     return 0;
 }
 
-int main()
+int test_hashtable()
 {
     HashTable t;
 
