@@ -333,10 +333,55 @@ void* popFront_LkList(LkList *L)
     return delete_LkList(L, L->head->next);
 }
 
+
 /*
  *pop back
  */
 void* popBack_LkList(LkList *L)                                                                                        
 {
     return delete_LkList(L, L->end->prior);
+}
+
+
+/*
+ *traverse element one by one
+ */
+void traverse_LkList(LkList *L, TraverseAction_LkList (*handler)(const void *valuePoint))
+{
+    LkListElement *previous=NULL, *current=NULL;
+    TraverseAction_LkList action;
+
+    if(L==NULL)
+    {
+        return;
+    }
+
+    previous = L->head;
+    for(current=L->head->next; current!=L->end; /*none*/)  //find from first element
+    {
+        action=handler(current->valuePoint);
+        switch(action)
+        {
+        case DO_NOTHING_LKLIST:    
+            previous = current;
+            current = current->next;
+            break;
+        case DELETE_ELEMENT_LKLIST:
+            current->prior->next=current->next; 
+            current->next->prior=current->prior;
+            --(L->size);
+            free(current);
+            current=previous->next;
+            break;
+        case STOP_TRAVERSE_LKLIST: 
+            return;
+        case DELETE_AND_STOP_LKLIST:                    
+            current->prior->next=current->next; 
+            current->next->prior=current->prior;
+            --(L->size);
+            free(current);
+            current=previous->next;
+            return;
+        }
+    }
 }

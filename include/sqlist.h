@@ -12,8 +12,8 @@ typedef struct _SqListElement
 
 typedef struct _SqList
 {
-    SqListElement *begin;  //pobool to the first element
-    SqListElement *end;    //pobool to the tail
+    SqListElement *begin;  //point to the first element
+    SqListElement *end;    //point to the end, but not last element
     size_t capacity;       //size of space
 } SqList;
 
@@ -43,12 +43,12 @@ SqListElement* getByNum_SqList(const SqList *L, const size_t number);           
 SqListElement* getByVal_SqList(const SqList *L, const void *valuePoint, int (*compare)(const void *valuePoint1, const void *valuePoint2));  //get element by value    
 
 SqListElement* insert_SqList(SqList *L, const SqListElement *current, const void *valuePoint2);  //insert before current element
-void* delete_SqList(SqList *L, const SqListElement *current);      //delete current element, return valuePobool of it
+void* delete_SqList(SqList *L, const SqListElement *current);       //delete current element, return valuePobool of it
 
 SqListElement* pushFront_SqList(SqList *L, const void *valuePoint); //push front
 SqListElement* pushBack_SqList(SqList *L, const void *valuePoint);  //push back
-void* popFront_SqList(SqList *L);                                  //pop front
-void* popBack_SqList(SqList *L);                                   //pop back
+void* popFront_SqList(SqList *L);                                   //pop front
+void* popBack_SqList(SqList *L);                                    //pop back
 
 //traverse all element one by one
 void traverse_SqList(SqList *L, TraverseAction_SqList (*handler)(const void *valuePoint));  

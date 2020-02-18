@@ -15,7 +15,7 @@ typedef struct _LkListElement
 typedef struct _LkList
 {
     LkListElement *head;   //point to the head, but not first element
-    LkListElement *end;    //point to the last element
+    LkListElement *end;    //point to the end, but not last element
     size_t size;           //size of elements
 } LkList;
 
@@ -42,12 +42,12 @@ LkListElement* getByNum_LkList(const LkList *L, const size_t number);           
 LkListElement* getByVal_LkList(const LkList *L, const void *valuePoint, int (*compare)(const void *valuePoint1, const void *valuePoint2));  //get element by value    
 
 LkListElement* insert_LkList(LkList *L, const LkListElement *current, const void *valuePoint);   //insert before current element
-void* delete_LkList(LkList *L, const LkListElement *current);      //delete current element, return valuePoint of it
-
+void* delete_LkList(LkList *L, const LkListElement *current);       //delete current element, return valuePoint of it
+ 
 LkListElement* pushFront_LkList(LkList *L, const void *valuePoint); //push front
 LkListElement* pushBack_LkList(LkList *L, const void *valuePoint);  //push back
-void* popFront_LkList(LkList *L);                                  //pop front
-void* popBack_LkList(LkList *L);                                   //pop back
+void* popFront_LkList(LkList *L);                                   //pop front
+void* popBack_LkList(LkList *L);                                    //pop back
 
 //traverse all element one by one
 void traverse_LkList(LkList *L, TraverseAction_LkList (*handler)(const void *valuePoint));  

@@ -236,6 +236,7 @@ void* delete_HashTable(HashTable *T, const char *K)
             T->bucket[index]=current->next;
         }
         --(T->size);
+        free(current);
         return valuePoint;
     }
     else
@@ -246,12 +247,13 @@ void* delete_HashTable(HashTable *T, const char *K)
 
 
 /*
- *traverse hashelement one by one, and handle it with handler callback function
+ *traverse hashelement one by one, but element order is not same to insert order
  */
-void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(const HashTableElement *valuePoint))
+void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(const void *valuePoint))
 {
     int i;
-    bool stop;
+    TraverseAction_HashTable action;
+    HashTableElement *previous=NULL, *current=NULL;
 
     if(T==NULL)
     {
@@ -262,12 +264,47 @@ void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(const 
     {
         if(T->bucket[i]!=NULL)
         {
-            HashTableElement *current=NULL;
-            for(current=T->bucket[i]; current!=NULL; current=current->next)
+            previous = NULL;
+            for(current=T->bucket[i]; current!=NULL; /*none*/)
             {
-                stop=handler(current);  //if handler return true, break traverse
-                if(stop)
+                action=handler(current->valuePoint);
+                switch(action)
                 {
+                case DO_NOTHING_HASHTABLE:    
+                    previous = current;
+                    current = current->next;
+                    break;
+                case DELETE_ELEMENT_HASHTABLE:
+                    if(previous!=NULL)  //current element not in the first place
+                    {
+                        previous->next=current->next;
+                        free(current);
+                        current = previous->next;
+                    }
+                    else                //finded element is the first element of key mapped bucket
+                    {
+                        T->bucket[i]=current->next;
+                        free(current);
+                        current = T->bucket[i];
+                    }
+                    --(T->size);
+                    break;
+                case STOP_TRAVERSE_HASHTABLE: 
+                    return;
+                case DELETE_AND_STOP_HASHTABLE:                    
+                    if(previous!=NULL)  //current element not in the first place
+                    {
+                        previous->next=current->next;
+                        free(current);
+                        current = previous->next;
+                    }
+                    else                //finded element is the first element of key mapped bucket
+                    {
+                        T->bucket[i]=current->next;
+                        free(current);
+                        current = T->bucket[i];
+                    }
+                    --(T->size);
                     return;
                 }
             }

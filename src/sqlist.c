@@ -293,7 +293,7 @@ SqListElement* getByVal_SqList(const SqList *L, const void *valuePoint, int (*co
         return L->end;
     }
 
-    for(p=L->begin ; p!=L->end; ++p)    //search from L->begin
+    for(p=L->begin; p!=L->end; ++p)    //search from L->begin
     {
         if(compare(p->valuePoint, valuePoint)==0)    //when two value equals, stop!
         {
@@ -399,4 +399,46 @@ void* popFront_SqList(SqList *L)
 void* popBack_SqList(SqList *L)
 {
     return delete_SqList(L, L->end-1);
+}
+
+
+/*
+ *traverse element one by one
+ */
+void traverse_SqList(SqList *L, TraverseAction_SqList (*handler)(const void *valuePoint))
+{
+    SqListElement *p=NULL;
+    SqListElement *previous=NULL, *current=NULL;
+    TraverseAction_SqList action;
+
+    if(L==NULL)
+    {
+        return;
+    }
+
+    previous = NULL;
+    for(current=L->begin ; current!=L->end; /*none*/)    //search from L->begin
+    {
+        action=handler(current->valuePoint);
+        switch(action)
+        {
+        case DO_NOTHING_SQLIST:    
+            ++current;
+            break;
+        case DELETE_ELEMENT_SQLIST:
+            for(p=current; p!=L->end-1; ++p)
+            {
+                *p=*(p+1);
+            }
+            break;
+        case STOP_TRAVERSE_SQLIST: 
+            return;
+        case DELETE_AND_STOP_SQLIST:                    
+            for(p=current; p!=L->end-1; ++p)
+            {
+                *p=*(p+1);
+            }
+            return;
+        }
+    }
 }
