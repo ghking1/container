@@ -14,9 +14,9 @@ typedef struct _LkListElement
 
 typedef struct _LkList
 {
-    LkListElement *head;   //point to the head, but not first element
-    LkListElement *end;    //point to the end, but not last element
-    size_t size;           //size of elements
+    LkListElement *head;    //point to the head, who is before first element
+    LkListElement *tail;    //point to the tail, who is after last element
+    size_t size;            //size of elements
 } LkList;
 
 typedef enum _TraverseAction_LkList
@@ -34,8 +34,8 @@ bool destroy_LkList(LkList *L);             //destroy it
 bool isEmpty_LkList(const LkList *L);       //is empty return true, else return false
 size_t getSize_LkList(const LkList *L);     //return size of elements
 
-LkListElement* getBegin_LkList(const LkList *L);                                //return first element of it
-LkListElement* getEnd_LkList(const LkList *L);                                  //return last element of it
+LkListElement* getFirst_LkList(const LkList *L);                                //return first element of it
+LkListElement* getLast_LkList(const LkList *L);                                 //return last element of it
 LkListElement* getPrev_LkList(const LkList *L, const LkListElement *current);   //return prevElemet of it
 LkListElement* getNext_LkList(const LkList *L, const LkListElement *current);   //return nextElement of it
 LkListElement* getByNum_LkList(const LkList *L, const size_t number);           //get element by number

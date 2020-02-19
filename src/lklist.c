@@ -10,26 +10,21 @@
  */
 bool init_LkList(LkList *L)                
 {
-    LkListElement *pHead= NULL;
-    LkListElement *pend= NULL;    
-
     if(L==NULL)    //L==NULL, is invalid
     { 
         return false;
     }    
 
-    pHead = (LkListElement*)malloc(sizeof(LkListElement));  //allocate head and initial it
-    pEnd = (LkListElement*)malloc(sizeof(LkListElement));   //allocate end and initial it
+    L->head = (LkListElement*)malloc(sizeof(LkListElement));  //allocate head and initial it
+    L->tail = (LkListElement*)malloc(sizeof(LkListElement));   //allocate tail and initial it
 
-    pHead->value_point=NULL;
-    pHead->prev=NULL;
-    pHead->next=pend;
-    pEnd->value_point=NULL;
-    pEnd->prev=pHead;
-    pEnd->next=NULL;
+    L->head->value_point=NULL;
+    L->head->prev=NULL;
+    L->head->next=L->tail;
+    L->tail->value_point=NULL;
+    L->tail->prev=L->head;
+    L->tail->next=NULL;
 
-    L->head=pHead;
-    L->end=pend;
     L->size=0;
 
     return true;
@@ -41,22 +36,22 @@ bool init_LkList(LkList *L)
  */
 bool clear_LkList(LkList *L)                
 {
-    LkListElement *previous=NULL, *current=NULL;//release all element excluding head and end
+    LkListElement *previous=NULL, *current=NULL;//release all element excluding head and tail
 
     if(L==NULL)    //L==NULL, is invalid
     { 
         return false;
     }    
 
-    for(current=L->head->next; current!=L->end; /*none*/)
+    for(current=L->head->next; current!=L->tail; /*none*/)
     {
         previous=current;
         current=current->next;
         free(previous);
     }
     
-    L->head->next=L->end;    //head point's next point pointed to NULL
-    L->end->prev=L->head;   //head and last point to head
+    L->head->next=L->tail;    //head point's next point pointed to NULL
+    L->tail->prev=L->head;   //head and last point to head
     L->size=0;
     return true;
 }
@@ -73,11 +68,11 @@ bool destroy_LkList(LkList *L)
     }    
 
     clear_LkList(L); //first free all element node
-    free(L->head);   //then free head and end
-    free(L->end);
+    free(L->head);   //then free head and tail
+    free(L->tail);
 
     L->head=NULL;    //set it uninitialed
-    L->end=NULL;
+    L->tail=NULL;
     L->size=0;
 
     return true;
@@ -120,14 +115,19 @@ size_t getSize_LkList(const LkList *L)
  *********************************************************************/
 
 /*
- *return head element of it
+ *return first element of it
  */
-LkListElement* getBegin_LkList(const LkList *L)                                                                        
+LkListElement* getFirst_LkList(const LkList *L)                                                                        
 {
     if(L==NULL)    //L==NULL, is invalid
     { 
         return NULL;
     }    
+
+    if(L->size == 0)
+    {
+        return NULL;
+    }
 
     return L->head->next;
 }
@@ -136,14 +136,19 @@ LkListElement* getBegin_LkList(const LkList *L)
 /*
  *return last element of it
  */
-LkListElement* getEnd_LkList(const LkList *L)
+LkListElement* getLast_LkList(const LkList *L)
 {
     if(L==NULL)    //L==NULL, is invalid
     { 
         return NULL;
     }    
 
-    return L->end;
+    if(L->size == 0)
+    {
+        return NULL;
+    }
+
+    return L->tail->prev;
 }    
 
 
@@ -159,7 +164,7 @@ LkListElement* getPrev_LkList(const LkList *L, const LkListElement *current)
 
     if(current==NULL || L->size==0 || current==L->head->next)    //head element has no prev element
     {
-        return L->end;
+        return NULL;
     }
     else
     {
@@ -178,9 +183,9 @@ LkListElement* getNext_LkList(const LkList *L, const LkListElement *current)
         return NULL;
     }    
 
-    if(current==NULL || L->size==0 || current==L->end->prev)    //last element has no next element
+    if(current==NULL || L->size==0 || current==L->tail->prev)    //last element has no next element
     {
-        return L->end;
+        return NULL;
     }
     else
     {
@@ -204,7 +209,7 @@ LkListElement* getByNum_LkList(const LkList *L, const size_t number)
 
     if(L->size==0 || number<=0 || number>L->size)
     {
-        return L->end;
+        return NULL;
     }
 
     while(i<number)
@@ -231,10 +236,10 @@ LkListElement* getByVal_LkList(const LkList *L, const void *value_point, int (*c
 
     if(L->size==0 || value_point==NULL || compare==NULL)
     {
-        return L->end;
+        return NULL;
     }
 
-    for(p=L->head->next; p!=L->end; p=p->next)       //find from first element
+    for(p=L->head->next; p!=L->tail; p=p->next)       //find from first element
     {
         if(compare(p->value_point, value_point)==0)    //equals then stop
         {
@@ -242,7 +247,7 @@ LkListElement* getByVal_LkList(const LkList *L, const void *value_point, int (*c
         }
     }
 
-    return p;
+    return p==L->tail ? NULL : p;
 }    
 
 
@@ -260,13 +265,13 @@ LkListElement* insert_LkList(LkList *L, const LkListElement *current, const void
     
     if(current==NULL || value_point==NULL)
     {
-        return L->end;
+        return NULL;
     }
 
     p=(LkListElement *)malloc(sizeof(LkListElement));
     if(p==NULL)
     {
-        exit(ALLOCATE_MEMORY_ERROR);
+        return NULL;
     }
     
     p->value_point=(void*)value_point;    //point to value
@@ -320,7 +325,7 @@ LkListElement* pushFront_LkList(LkList *L, const void *value_point)
  */
 LkListElement* pushBack_LkList(LkList *L, const void *value_point)                                                        
 {
-    return insert_LkList(L, L->end, value_point);
+    return insert_LkList(L, L->tail, value_point);
 }
 
 
@@ -338,7 +343,7 @@ void* popFront_LkList(LkList *L)
  */
 void* popBack_LkList(LkList *L)                                                                                        
 {
-    return delete_LkList(L, L->end->prev);
+    return delete_LkList(L, L->tail->prev);
 }
 
 
@@ -356,7 +361,7 @@ void traverse_LkList(LkList *L, TraverseAction_LkList (*handler)(const void *val
     }
 
     previous = L->head;
-    for(current=L->head->next; current!=L->end; /*none*/)  //find from first element
+    for(current=L->head->next; current!=L->tail; /*none*/)  //find from first element
     {
         action=handler(current->value_point);
         switch(action)
