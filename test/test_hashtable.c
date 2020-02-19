@@ -3,7 +3,7 @@
 
 int print_hash_element(const HashTableElement *E)
 {
-    printf("%s:%d\n", E->key, *(int*)(E->valuePoint));
+    printf("%s:%d\n", E->key, *(int*)(E->value_point));
     return 0;
 }
 
@@ -29,15 +29,15 @@ int test_hashtable()
     E3=get_HashTable(&t, "there");
     if(E1!=NULL)
     {
-        printf("%s:%d\n", E1->key, *(int*)(E1->valuePoint));
+        printf("%s:%d\n", E1->key, *(int*)(E1->value_point));
     }
     if(E2!=NULL)
     {
-        printf("%s:%d\n", E2->key, *(int*)(E2->valuePoint));
+        printf("%s:%d\n", E2->key, *(int*)(E2->value_point));
     }
     if(E3!=NULL)
     {
-        printf("%s:%d\n", E3->key, *(int*)(E3->valuePoint));
+        printf("%s:%d\n", E3->key, *(int*)(E3->value_point));
     }
 
     delete_HashTable(&t, "two");
@@ -67,15 +67,15 @@ int test_hashtable()
     E3=get_HashTable(&t, "there");
     if(E1!=NULL)
     {
-        printf("%s:%d\n", E1->key, *(int*)(E1->valuePoint));
+        printf("%s:%d\n", E1->key, *(int*)(E1->value_point));
     }
     if(E2!=NULL)
     {
-        printf("%s:%d\n", E2->key, *(int*)(E2->valuePoint));
+        printf("%s:%d\n", E2->key, *(int*)(E2->value_point));
     }
     if(E3!=NULL)
     {
-        printf("%s:%d\n", E3->key, *(int*)(E3->valuePoint));
+        printf("%s:%d\n", E3->key, *(int*)(E3->value_point));
     }
 
     delete_HashTable(&t, "two");

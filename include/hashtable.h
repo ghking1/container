@@ -8,7 +8,7 @@
 typedef struct _HashTableElement
 {
     char *key;
-    void *valuePoint;
+    void *value_point;
     struct _HashTableElement *next;
 } HashTableElement;
 
@@ -35,11 +35,11 @@ bool isEmpty_HashTable(const HashTable *T);                  //is empty return t
 size_t getSize_HashTable(const HashTable *T);                //return size of elements
 
 HashTableElement* get_HashTable(const HashTable *T, const char *K);             //get element by key
-HashTableElement* set_HashTable(HashTable *T, const char *K, void *valuePoint); //set element by key
+HashTableElement* set_HashTable(HashTable *T, const char *K, void *value_point); //set element by key
 void* delete_HashTable(HashTable *T, const char *K);                            //delete element by key
 
 //traverse all element one by one, but element order is not same to insert order 
-void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(const void *valuePoint));  
+void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(const void *value_point));  
 
 #undef bool
 

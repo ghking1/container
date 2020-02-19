@@ -7,8 +7,8 @@
 
 typedef struct _LkListElement
 {
-    void *valuePoint;
-    struct _LkListElement *prior;
+    void *value_point;
+    struct _LkListElement *prev;
     struct _LkListElement *next;
 } LkListElement;
 
@@ -36,21 +36,21 @@ size_t getSize_LkList(const LkList *L);     //return size of elements
 
 LkListElement* getBegin_LkList(const LkList *L);                                //return first element of it
 LkListElement* getEnd_LkList(const LkList *L);                                  //return last element of it
-LkListElement* getPrior_LkList(const LkList *L, const LkListElement *current);  //return priorElemet of it
+LkListElement* getPrev_LkList(const LkList *L, const LkListElement *current);   //return prevElemet of it
 LkListElement* getNext_LkList(const LkList *L, const LkListElement *current);   //return nextElement of it
 LkListElement* getByNum_LkList(const LkList *L, const size_t number);           //get element by number
-LkListElement* getByVal_LkList(const LkList *L, const void *valuePoint, int (*compare)(const void *valuePoint1, const void *valuePoint2));  //get element by value    
+LkListElement* getByVal_LkList(const LkList *L, const void *value_point, int (*compare)(const void *value_point1, const void *value_point2));  //get element by value    
 
-LkListElement* insert_LkList(LkList *L, const LkListElement *current, const void *valuePoint);   //insert before current element
-void* delete_LkList(LkList *L, const LkListElement *current);       //delete current element, return valuePoint of it
+LkListElement* insert_LkList(LkList *L, const LkListElement *current, const void *value_point);   //insert before current element
+void* delete_LkList(LkList *L, const LkListElement *current);        //delete current element, return value_point of it
  
-LkListElement* pushFront_LkList(LkList *L, const void *valuePoint); //push front
-LkListElement* pushBack_LkList(LkList *L, const void *valuePoint);  //push back
-void* popFront_LkList(LkList *L);                                   //pop front
-void* popBack_LkList(LkList *L);                                    //pop back
+LkListElement* pushFront_LkList(LkList *L, const void *value_point); //push front
+LkListElement* pushBack_LkList(LkList *L, const void *value_point);  //push back
+void* popFront_LkList(LkList *L);                                    //pop front
+void* popBack_LkList(LkList *L);                                     //pop back
 
 //traverse all element one by one
-void traverse_LkList(LkList *L, TraverseAction_LkList (*handler)(const void *valuePoint));  
+void traverse_LkList(LkList *L, TraverseAction_LkList (*handler)(const void *value_point));  
 
 #undef bool
 

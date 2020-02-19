@@ -26,7 +26,7 @@ int test_sqlist()
 
     while(p!=l.end)
     {
-        printf("%d\n", *(int*)p->valuePoint);
+        printf("%d\n", *(int*)p->value_point);
         p=getNext_SqList(&l, p);
     }
 
@@ -39,20 +39,20 @@ int test_sqlist()
     popFront_SqList(&l);
 
     p=getEnd_SqList(&l);
-    p=getPrior_SqList(&l, p);
+    p=getPrev_SqList(&l, p);
     while(p!=l.end)
     {
-        printf("%d\n", *(int*)p->valuePoint);
-        p=getPrior_SqList(&l, p);
+        printf("%d\n", *(int*)p->value_point);
+        p=getPrev_SqList(&l, p);
     }
     
     pushFront_SqList(&l, &a);
 
     p=getByNum_SqList(&l, 2);
-    printf("%d\n", *(int*)p->valuePoint);
+    printf("%d\n", *(int*)p->value_point);
 
     p=getByVal_SqList(&l, &a, sqlist_compare);
-    printf("%d\n", *(int*)p->valuePoint);
+    printf("%d\n", *(int*)p->value_point);
 
 
     destroy_SqList(&l);

@@ -30,7 +30,7 @@ bool init_HashTable(HashTable *T, const size_t bucket_size)
 
 
 /*
- *clear all element in hashtable, you must handle all valuepoint in it yourself before clear it
+ *clear all element in hashtable, you must handle all value_point in it yourself before clear it
  */
 bool clear_HashTable(HashTable *T)
 {
@@ -62,7 +62,7 @@ bool clear_HashTable(HashTable *T)
 
 
 /*
- *destroy hashtable, you must handle all valuepoint in it yourself before clear it
+ *destroy hashtable, you must handle all value_point in it yourself before clear it
  */
 bool destroy_HashTable(HashTable *T)
 {
@@ -156,7 +156,7 @@ HashTableElement* get_HashTable(const HashTable *T, const char *K)
 /*
  *set hashvalue by key
  */
-HashTableElement* set_HashTable(HashTable *T, const char *K, void *valuePoint)
+HashTableElement* set_HashTable(HashTable *T, const char *K, void *value_point)
 {
     size_t index = BKDRHash(K) % T->bucket_size;
     HashTableElement *current = NULL;
@@ -180,7 +180,7 @@ HashTableElement* set_HashTable(HashTable *T, const char *K, void *valuePoint)
 
     if(current!=NULL)  //key is exist, so change it's value directly
     {
-        current->valuePoint=valuePoint;
+        current->value_point=value_point;
         return current;
     }
     else               //create new HashTableElement
@@ -188,7 +188,7 @@ HashTableElement* set_HashTable(HashTable *T, const char *K, void *valuePoint)
         E=(HashTableElement*)malloc(sizeof(HashTableElement));
         E->key=(char*)malloc(sizeof(char)*strlen(K));
         strcpy(E->key, K);          //use key copy, but not reference
-        E->valuePoint=valuePoint;   
+        E->value_point=value_point;   
         E->next=T->bucket[index];   //put new element in the first place of key mapped bucket
         T->bucket[index]=E;         //bucket first element point to this new element
         ++(T->size);
@@ -204,7 +204,7 @@ void* delete_HashTable(HashTable *T, const char *K)
 {
     size_t index = BKDRHash(K) % T->bucket_size;
     HashTableElement *previous=NULL, *current=NULL;
-    void *valuePoint = NULL;
+    void *value_point = NULL;
 
     if(T==NULL || K==NULL)
     {
@@ -226,7 +226,7 @@ void* delete_HashTable(HashTable *T, const char *K)
 
     if(current!=NULL)
     {
-        valuePoint=current->valuePoint;
+        value_point=current->value_point;
         if(previous!=NULL)  //finded element not in the first place
         {
             previous->next=current->next;
@@ -237,7 +237,7 @@ void* delete_HashTable(HashTable *T, const char *K)
         }
         --(T->size);
         free(current);
-        return valuePoint;
+        return value_point;
     }
     else
     {
@@ -249,7 +249,7 @@ void* delete_HashTable(HashTable *T, const char *K)
 /*
  *traverse hashelement one by one, but element order is not same to insert order
  */
-void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(const void *valuePoint))
+void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(const void *value_point))
 {
     int i;
     TraverseAction_HashTable action;
@@ -267,7 +267,7 @@ void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(const 
             previous = NULL;
             for(current=T->bucket[i]; current!=NULL; /*none*/)
             {
-                action=handler(current->valuePoint);
+                action=handler(current->value_point);
                 switch(action)
                 {
                 case DO_NOTHING_HASHTABLE:    

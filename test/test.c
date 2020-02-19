@@ -1,7 +1,7 @@
 
-int test_hashtable();
-int test_lklist();
-int test_sqlist();
+extern int test_hashtable();
+extern int test_lklist();
+extern int test_sqlist();
 
 int main()
 {

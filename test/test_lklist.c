@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 #include "../include/lklist.h"
 
 int lklist_compare(const void*a, const void*b)
@@ -16,43 +17,41 @@ int lklist_compare(const void*a, const void*b)
 int test_lklist()
 {
     LkList l;
+    LkListElement *p;
+    int arr[3]={1, 2, 3};
+    int i;
+
+    //test pushBack, getBegin, getNext
     init_LkList(&l);
-    int a=1, b=2, c=3;
-    pushBack_LkList(&l, &a);
-    pushBack_LkList(&l, &b);
-    pushBack_LkList(&l, &c);
-
-    LkListElement *p=getBegin_LkList(&l);
-
-    while(p!=l.end)
+    pushBack_LkList(&l, &arr[0]);
+    pushBack_LkList(&l, &arr[1]);
+    pushBack_LkList(&l, &arr[2]);
+    for(i=0, p=getBegin_LkList(&l); p!=l.end; ++i, p=getNext_LkList(&l, p))
     {
-        printf("%d\n", *(int*)p->valuePoint);
-        p=getNext_LkList(&l, p);
+        assert(*(int*)p->value_point == arr[i]);
     }
-
     clear_LkList(&l);
+    assert(l->size == 0);
 
-    pushFront_LkList(&l, &a);
-    pushFront_LkList(&l, &b);
-    pushFront_LkList(&l, &c);
-    popBack_LkList(&l);
-    popFront_LkList(&l);
-
+    //test pushFront, getEnd, getPrev
+    pushFront_LkList(&l, &arr[0]);
+    pushFront_LkList(&l, &arr[1]);
+    pushFront_LkList(&l, &arr[2]);
     p=getEnd_LkList(&l);
-    p=getPrior_LkList(&l, p);
+    p=getPrev_LkList(&l, p);
     while(p!=l.end)
     {
-        printf("%d\n", *(int*)p->valuePoint);
-        p=getPrior_LkList(&l, p);
+        printf("%d\n", *(int*)p->value_point);
+        p=getPrev_LkList(&l, p);
     }
     
     pushFront_LkList(&l, &a);
 
     p=getByNum_LkList(&l, 2);
-    printf("%d\n", *(int*)p->valuePoint);
+    printf("%d\n", *(int*)p->value_point);
 
     p=getByVal_LkList(&l, &a, lklist_compare);
-    printf("%d\n", *(int*)p->valuePoint);
+    printf("%d\n", *(int*)p->value_point);
 
     destroy_LkList(&l);
     

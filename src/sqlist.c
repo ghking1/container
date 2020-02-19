@@ -75,7 +75,7 @@ bool init_SqList(SqList *L)
 
 
 /*
- *clear all element in it, you must handle all valuepoint in it yourself before clear it
+ *clear all element in it, you must handle all value_point in it yourself before clear it
  */
 bool clear_SqList(SqList *L)                
 {
@@ -91,7 +91,7 @@ bool clear_SqList(SqList *L)
 
 
 /*
- *destroy it, you must handle all valuepoint in it yourself before clear it
+ *destroy it, you must handle all value_point in it yourself before clear it
  */
 bool destroy_SqList(SqList *L)
 {
@@ -214,16 +214,16 @@ SqListElement* getEnd_SqList(const SqList *L)
 
 
 /*
- *return priorElemet of it
+ *return prevElemet of it
  */
-SqListElement* getPrior_SqList(const SqList *L, const SqListElement *current)                                            
+SqListElement* getPrev_SqList(const SqList *L, const SqListElement *current)                                            
 {
     if(L==NULL)    //NULL, is invalid
     { 
         return NULL;
     }    
 
-    if(current==NULL || (L->end)-(L->begin)==0 || current==L->begin)        //begin element has no prior element
+    if(current==NULL || (L->end)-(L->begin)==0 || current==L->begin)        //begin element has no prev element
     {
         return L->end;
     }
@@ -279,7 +279,7 @@ SqListElement* getByNum_SqList(const SqList *L, const size_t number)
 /*
  *get element by value
  */
-SqListElement* getByVal_SqList(const SqList *L, const void *valuePoint, int (*compare)(const void *valuepoint1, const void *valuepoint2))
+SqListElement* getByVal_SqList(const SqList *L, const void *value_point, int (*compare)(const void *value_point1, const void *value_point2))
 {
     SqListElement *p=NULL;
 
@@ -288,14 +288,14 @@ SqListElement* getByVal_SqList(const SqList *L, const void *valuePoint, int (*co
         return NULL;
     }    
 
-    if((L->end)-(L->begin)==0 || valuePoint==NULL || compare==NULL)
+    if((L->end)-(L->begin)==0 || value_point==NULL || compare==NULL)
     {
         return L->end;
     }
 
     for(p=L->begin; p!=L->end; ++p)    //search from L->begin
     {
-        if(compare(p->valuePoint, valuePoint)==0)    //when two value equals, stop!
+        if(compare(p->value_point, value_point)==0)    //when two value equals, stop!
         {
             break;
         }
@@ -308,7 +308,7 @@ SqListElement* getByVal_SqList(const SqList *L, const void *valuePoint, int (*co
 /*
  *insert before current element
  */
-SqListElement* insert_SqList(SqList *L, const SqListElement *current, const void *valuePoint)
+SqListElement* insert_SqList(SqList *L, const SqListElement *current, const void *value_point)
 {
     SqListElement *p=NULL;                    
     if(L==NULL)    //NULL, is invalid
@@ -316,7 +316,7 @@ SqListElement* insert_SqList(SqList *L, const SqListElement *current, const void
         return NULL;
     }    
 
-    if(current==NULL || valuePoint==NULL)
+    if(current==NULL || value_point==NULL)
     {
         return L->end;
     }
@@ -335,7 +335,7 @@ SqListElement* insert_SqList(SqList *L, const SqListElement *current, const void
         *p=*(p-1);
     }
     
-    p->valuePoint=(void *)valuePoint;        //const point transmit to normal
+    p->value_point=(void *)value_point;        //const point transmit to normal
 
     ++(L->end);    //refresh L's member
     return p;
@@ -343,11 +343,11 @@ SqListElement* insert_SqList(SqList *L, const SqListElement *current, const void
 
 
 /*
- *delete current element, return valuePoint of it
+ *delete current element, return value_point of it
  */
 void* delete_SqList(SqList *L, const SqListElement *current)    
 {
-    void *valuePoint=current->valuePoint;    //save valuePoint 
+    void *value_point=current->value_point;    //save value_point 
     SqListElement *p=NULL;                    
 
     if(L==NULL || (L->end)-(L->begin)==0 || current==NULL)   //NULL, is invalid
@@ -362,25 +362,25 @@ void* delete_SqList(SqList *L, const SqListElement *current)
     }
 
     --(L->end);    //refresh L's member
-    return valuePoint;
+    return value_point;
 }    
 
 
 /*
  *push front
  */
-SqListElement* pushFront_SqList(SqList *L, const void *valuePoint)
+SqListElement* pushFront_SqList(SqList *L, const void *value_point)
 {
-    return insert_SqList(L, L->begin, valuePoint);
+    return insert_SqList(L, L->begin, value_point);
 }
 
 
 /*
  *push back
  */
-SqListElement* pushBack_SqList(SqList *L, const void *valuePoint)
+SqListElement* pushBack_SqList(SqList *L, const void *value_point)
 {
-    return insert_SqList(L, L->end, valuePoint);
+    return insert_SqList(L, L->end, value_point);
 }
 
 
@@ -405,7 +405,7 @@ void* popBack_SqList(SqList *L)
 /*
  *traverse element one by one
  */
-void traverse_SqList(SqList *L, TraverseAction_SqList (*handler)(const void *valuePoint))
+void traverse_SqList(SqList *L, TraverseAction_SqList (*handler)(const void *value_point))
 {
     SqListElement *p=NULL;
     SqListElement *previous=NULL, *current=NULL;
@@ -419,7 +419,7 @@ void traverse_SqList(SqList *L, TraverseAction_SqList (*handler)(const void *val
     previous = NULL;
     for(current=L->begin ; current!=L->end; /*none*/)    //search from L->begin
     {
-        action=handler(current->valuePoint);
+        action=handler(current->value_point);
         switch(action)
         {
         case DO_NOTHING_SQLIST:    
