@@ -6,9 +6,9 @@ extern void test_sqlist();
 
 int main()
 {
-    //test_lklist();
+    test_lklist();
     test_sqlist();
-    //test_hashtable();
+    test_hashtable();
 
     printf("\nall test finished successfully!\n");
 

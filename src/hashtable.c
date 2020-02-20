@@ -121,8 +121,8 @@ size_t BKDRHash(const char *S)
 
     while(c=(size_t)*S++)
     {
-        hash = hash*131 + c;   
         //equal to hash = hash << 7 + hash << 1 + hash + c;
+        hash = hash*131 + c;   
     }
 }
 
@@ -157,7 +157,7 @@ HashTableElement* get_HashTable(const HashTable *T, const char *K)
 /*
  *set hashvalue by key
  */
-HashTableElement* set_HashTable(HashTable *T, const char *K, void *value_point)
+HashTableElement* set_HashTable(HashTable *T, const char *K, const void *value_point)
 {
     size_t index = BKDRHash(K) % T->bucket_size;
     HashTableElement *current = NULL;
@@ -165,7 +165,7 @@ HashTableElement* set_HashTable(HashTable *T, const char *K, void *value_point)
 
     if(T==NULL || K==NULL)
     {
-        return false;
+        return NULL;
     }
 
     if(T->bucket[index]!=NULL)
@@ -179,17 +179,19 @@ HashTableElement* set_HashTable(HashTable *T, const char *K, void *value_point)
         }
     }
 
-    if(current!=NULL)  //key is exist, so change it's value directly
+    if(current!=NULL)  
     {
-        current->value_point=value_point;
-        return current;
+        //key is exist, user must delete it manually first
+        //because cover value_point directly may cause memory leak
+        return NULL;
     }
-    else               //create new HashTableElement
+    else 
     {
+        //create new HashTableElement
         E=(HashTableElement*)malloc(sizeof(HashTableElement));
         E->key=(char*)malloc(sizeof(char)*strlen(K));
         strcpy(E->key, K);          //use key copy, but not reference
-        E->value_point=value_point;   
+        E->value_point=(void*)value_point;   
         E->next=T->bucket[index];   //put new element in the first place of key mapped bucket
         T->bucket[index]=E;         //bucket first element point to this new element
         ++(T->size);
@@ -237,6 +239,7 @@ void* delete_HashTable(HashTable *T, const char *K)
             T->bucket[index]=current->next;
         }
         --(T->size);
+        free(current->key);
         free(current);
         return value_point;
     }
@@ -279,12 +282,14 @@ void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(const 
                     if(previous!=NULL)  //current element not in the first place
                     {
                         previous->next=current->next;
+                        free(current->key);
                         free(current);
                         current = previous->next;
                     }
                     else                //finded element is the first element of key mapped bucket
                     {
                         T->bucket[i]=current->next;
+                        free(current->key);
                         free(current);
                         current = T->bucket[i];
                     }
@@ -296,12 +301,14 @@ void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(const 
                     if(previous!=NULL)  //current element not in the first place
                     {
                         previous->next=current->next;
+                        free(current->key);
                         free(current);
                         current = previous->next;
                     }
                     else                //finded element is the first element of key mapped bucket
                     {
                         T->bucket[i]=current->next;
+                        free(current->key);
                         free(current);
                         current = T->bucket[i];
                     }

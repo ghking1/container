@@ -125,6 +125,20 @@ bool isEmpty_SqList(const SqList *L)
 
 
 /*
+ *return size of elements
+ */
+size_t getSize_SqList(const SqList *L)            
+{
+    if(L==NULL)    //L==NULL, is invalid
+    {
+        return 0;
+    }    
+
+    return L->size;
+}
+
+
+/*
  *set new size of space
  */
 bool setCapacity_SqList(SqList *L, const size_t capacity)
@@ -150,20 +164,6 @@ bool setCapacity_SqList(SqList *L, const size_t capacity)
         return false;
     }
 }    
-
-
-/*
- *return size of elements
- */
-size_t getSize_SqList(const SqList *L)            
-{
-    if(L==NULL)    //L==NULL, is invalid
-    {
-        return 0;
-    }    
-
-    return L->size;
-}
 
 
 /*
