@@ -13,7 +13,6 @@ typedef struct _SqListElement
 typedef struct _SqList
 {
     SqListElement *first;  //point to the first element
-    SqListElement *last;   //point to the last element
     size_t size;           //size of list 
     size_t capacity;       //size of space
 } SqList;
@@ -40,7 +39,7 @@ SqListElement* getFirst_SqList(const SqList *L);                               /
 SqListElement* getLast_SqList(const SqList *L);                                //return last element of it
 SqListElement* getPrev_SqList(const SqList *L, const SqListElement *current);  //return prevElemet of it
 SqListElement* getNext_SqList(const SqList *L, const SqListElement *current);  //return nextElement of it
-SqListElement* getByNum_SqList(const SqList *L, const size_t number);          //get element by number
+SqListElement* getByOrd_SqList(const SqList *L, const size_t order);           //get element by order
 SqListElement* getByVal_SqList(const SqList *L, const void *value_point, int (*compare)(const void *value_point1, const void *value_point2));  //get element by value    
 
 SqListElement* insert_SqList(SqList *L, const SqListElement *current, const void *value_point2);  //insert before current element

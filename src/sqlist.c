@@ -51,7 +51,6 @@ bool reAllocate(SqList* L, const size_t capacity)
         return false;
     }            
 
-    L->last=L->first + (L->size-1);    //set new last point
     L->capacity=new_capacity;   //set new capacity
     return true;
 }
@@ -68,7 +67,6 @@ bool init_SqList(SqList *L)
     }
 
     L->first = NULL;  //initial SqList
-    L->last  = NULL;
     L->size     = 0;
     L->capacity = 0;
     
@@ -86,7 +84,6 @@ bool clear_SqList(SqList *L)
         return false;
     }    
 
-    L->last=L->first;    //reset SqList
     L->size = 0;
 
     return true;
@@ -106,7 +103,6 @@ bool destroy_SqList(SqList *L)
     free(L->first);    //free memory
     
     L->first=NULL;     //set SqList uninitialed
-    L->last=NULL;
     L->size=0;
     L->capacity=0;
 
@@ -225,7 +221,7 @@ SqListElement* getLast_SqList(const SqList *L)
         return NULL;
     }
 
-    return L->last;
+    return L->first + (L->size -1);
 }
 
 
@@ -260,7 +256,7 @@ SqListElement* getNext_SqList(const SqList *L, const SqListElement *current)
         return NULL;
     }    
 
-    if(current==NULL || L->size==0 || current==L->last)  //last element has no next element
+    if(current==NULL || L->size==0 || current >= L->first + (L->size -1))  //last element has no next element
     {
         return NULL;
     }
@@ -272,22 +268,22 @@ SqListElement* getNext_SqList(const SqList *L, const SqListElement *current)
 
 
 /*
- *get element by number
+ *get element by order
  */
-SqListElement* getByNum_SqList(const SqList *L, const size_t number)
+SqListElement* getByOrd_SqList(const SqList *L, const size_t order)
 {
     if(L==NULL)    //L==NULL, is invalid
     {
         return NULL;
     }    
 
-    if(L->size==0 || number<=0 || number>L->size)    //number is not in range
+    if(L->size==0 || order<=0 || order>L->size)    //order is not in range
     {
         return NULL;
     }
     else
     {
-        return L->first+(number-1);
+        return L->first+(order-1);
     }
 }    
 
@@ -347,15 +343,14 @@ SqListElement* insert_SqList(SqList *L, const SqListElement *current, const void
     }
 
     //move all elements after current back, including current
-    for(p=L->last+1; p!=current; --p)
+    for(p=(L->first + L->size); p!=current; --p)
     {
         *p=*(p-1);
     }
     
     p->value_point=(void *)value_point;        //const point transmit to normal
-
-    ++(L->last);    //refresh L's member
     ++(L->size);
+
     return p;
 }
 
@@ -374,13 +369,13 @@ void* delete_SqList(SqList *L, const SqListElement *current)
     }    
 
     //move all elements after current forward, excluding current
-    for(p=(SqListElement*)current; p!=L->last; ++p)    //here need do an force type transform: from const to normal!
+    for(p=(SqListElement*)current; p!=(L->first + (L->size - 1)); ++p)    //here need do an force type transform: from const to normal!
     {
         *p=*(p+1);
     }
 
-    --(L->last);    //refresh L's member
     --(L->size);
+
     return value_point;
 }    
 
@@ -399,7 +394,7 @@ SqListElement* pushFront_SqList(SqList *L, const void *value_point)
  */
 SqListElement* pushBack_SqList(SqList *L, const void *value_point)
 {
-    return insert_SqList(L, L->last+1, value_point);
+    return insert_SqList(L, L->first + L->size, value_point);
 }
 
 
@@ -417,7 +412,7 @@ void* popFront_SqList(SqList *L)
  */
 void* popBack_SqList(SqList *L)
 {
-    return delete_SqList(L, L->last);
+    return delete_SqList(L, L->first + (L->size - 1));
 }
 
 
@@ -436,7 +431,7 @@ void traverse_SqList(SqList *L, TraverseAction_SqList (*handler)(const void *val
     }
 
     previous = NULL;
-    for(current=L->first; current!=L->last+1; /*none*/)    //search from L->first
+    for(current=L->first; current!=(L->first + L->size); /*none*/)    //search from L->first
     {
         action=handler(current->value_point);
         switch(action)
@@ -445,21 +440,19 @@ void traverse_SqList(SqList *L, TraverseAction_SqList (*handler)(const void *val
             ++current;
             break;
         case DELETE_ELEMENT_SQLIST:
-            for(p=current; p!=L->last; ++p)
+            for(p=current; p!=(L->first + (L->size - 1)); ++p)
             {
                 *p=*(p+1);
             }
-            --(L->last);    //refresh L's member
             --(L->size);
             break;
         case STOP_TRAVERSE_SQLIST: 
             return;
         case DELETE_AND_STOP_SQLIST:                    
-            for(p=current; p!=L->last; ++p)
+            for(p=current; p!=(L->first + (L->size - 1)); ++p)
             {
                 *p=*(p+1);
             }
-            --(L->last);    //refresh L's member
             --(L->size);
             return;
         }

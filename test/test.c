@@ -1,13 +1,16 @@
+#include <stdio.h>
 
-extern int test_hashtable();
-extern int test_lklist();
-extern int test_sqlist();
+extern void test_hashtable();
+extern void test_lklist();
+extern void test_sqlist();
 
 int main()
 {
-    test_hashtable();
     test_lklist();
-    test_sqlist();
+    //test_sqlist();
+    //test_hashtable();
+
+    printf("\nall test finished successfully!\n");
 
     return 0;
 }

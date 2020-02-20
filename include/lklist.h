@@ -38,11 +38,11 @@ LkListElement* getFirst_LkList(const LkList *L);                                
 LkListElement* getLast_LkList(const LkList *L);                                 //return last element of it
 LkListElement* getPrev_LkList(const LkList *L, const LkListElement *current);   //return prevElemet of it
 LkListElement* getNext_LkList(const LkList *L, const LkListElement *current);   //return nextElement of it
-LkListElement* getByNum_LkList(const LkList *L, const size_t number);           //get element by number
+LkListElement* getByOrd_LkList(const LkList *L, const size_t order);            //get element by order
 LkListElement* getByVal_LkList(const LkList *L, const void *value_point, int (*compare)(const void *value_point1, const void *value_point2));  //get element by value    
 
-LkListElement* insert_LkList(LkList *L, const LkListElement *current, const void *value_point);   //insert before current element
-void* delete_LkList(LkList *L, const LkListElement *current);        //delete current element, return value_point of it
+LkListElement* insert_LkList(LkList *L, LkListElement *current, const void *value_point);   //insert before current element
+void* delete_LkList(LkList *L, LkListElement *current);        //delete current element, return value_point of it
  
 LkListElement* pushFront_LkList(LkList *L, const void *value_point); //push front
 LkListElement* pushBack_LkList(LkList *L, const void *value_point);  //push back

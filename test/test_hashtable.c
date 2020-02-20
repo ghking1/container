@@ -7,9 +7,9 @@ int print_hash_element(const HashTableElement *E)
     return 0;
 }
 
-int test_hashtable()
+void test_hashtable()
 {
-    HashTable t;
+    /*HashTable t;
 
     int a=1, b=2, c=3;
     HashTableElement* E1;
@@ -99,5 +99,5 @@ int test_hashtable()
         printf("init error\n");
     }
 
-    return 0;
+    return;*/
 }

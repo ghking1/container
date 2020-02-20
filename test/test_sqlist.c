@@ -13,9 +13,9 @@ int sqlist_compare(const void*a, const void*b)
     }
 }
 
-int test_sqlist()
+void test_sqlist()
 {
-    SqList l;
+    /*SqList l;
     init_SqList(&l);
     int a=1, b=2, c=3;
     pushBack_SqList(&l, &a);
@@ -55,7 +55,7 @@ int test_sqlist()
     printf("%d\n", *(int*)p->value_point);
 
 
-    destroy_SqList(&l);
+    destroy_SqList(&l);*/
 
-    return 0;
+    return;
 }
