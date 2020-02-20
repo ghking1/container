@@ -352,7 +352,7 @@ void* popBack_LkList(LkList *L)
 /*
  *traverse element one by one
  */
-void traverse_LkList(LkList *L, TraverseAction_LkList (*handler)(const void *value_point))
+void traverse_LkList(LkList *L, TraverseAction_LkList (*handler)(void *value_point))
 {
     LkListElement *previous=NULL, *current=NULL;
     TraverseAction_LkList action;
@@ -387,6 +387,8 @@ void traverse_LkList(LkList *L, TraverseAction_LkList (*handler)(const void *val
             --(L->size);
             free(current);
             current=previous->next;
+            return;
+        default:
             return;
         }
     }

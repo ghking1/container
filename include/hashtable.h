@@ -39,7 +39,7 @@ HashTableElement* set_HashTable(HashTable *T, const char *K, const void *value_p
 void* delete_HashTable(HashTable *T, const char *K);                            //delete element by key
 
 //traverse all element one by one, but element order is not same to insert order 
-void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(const void *value_point));  
+void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(char* key, void *value_point));  
 
 #undef bool
 

@@ -428,7 +428,7 @@ void* popBack_SqList(SqList *L)
 /*
  *traverse element one by one
  */
-void traverse_SqList(SqList *L, TraverseAction_SqList (*handler)(const void *value_point))
+void traverse_SqList(SqList *L, TraverseAction_SqList (*handler)(void *value_point))
 {
     SqListElement *p=NULL;
     SqListElement *previous=NULL, *current=NULL;
@@ -463,6 +463,8 @@ void traverse_SqList(SqList *L, TraverseAction_SqList (*handler)(const void *val
                 *p=*(p+1);
             }
             --(L->size);
+            return;
+        default:
             return;
         }
     }

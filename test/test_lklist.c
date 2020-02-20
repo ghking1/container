@@ -195,10 +195,72 @@ static void test_case_2()
     return;
 }
 
-void test_lklist()
+static TraverseAction_LkList handler(void *value_point)
+{
+    switch(*(int*)value_point)
+    {
+        case 1:
+            return DELETE_ELEMENT_LKLIST;
+        case 2:
+            return DO_NOTHING_LKLIST;
+        case 3:
+            return DELETE_ELEMENT_LKLIST;
+        case 4:
+            return DO_NOTHING_LKLIST;
+        case 5:
+            return DELETE_ELEMENT_LKLIST;
+        defalut:
+            assert(false);
+    }
+}
+
+//traverse
+static void test_case_3()
+{
+    LkList l;
+    int arr[5]={1, 2, 3, 4, 5};
+    int i=0;
+    LkListElement *p=NULL;
+
+    //init
+    init_LkList(&l);
+
+    //pushBack, list value should be [1-> 2 -> 3 -> 4 -> 5]
+    for(i=0; i<5; ++i)
+    {
+        p=pushBack_LkList(&l, &arr[i]);
+        assert(*(int*)p->value_point == arr[i]);
+    }
+    assert(getSize_LkList(&l) == 5);
+
+    //traverse
+    traverse_LkList(&l, handler);
+    assert(getSize_LkList(&l) == 2);
+
+    p=getByVal_LkList(&l, &arr[0], compare);
+    assert(p==NULL);
+
+    p=getByVal_LkList(&l, &arr[1], compare);
+    assert(*(int*)p->value_point == arr[1]);
+
+    p=getByVal_LkList(&l, &arr[2], compare);
+    assert(p==NULL);
+
+    p=getByVal_LkList(&l, &arr[3], compare);
+    assert(*(int*)p->value_point == arr[3]);
+
+    p=getByVal_LkList(&l, &arr[4], compare);
+    assert(p==NULL);
+
+    //destroy
+    destroy_LkList(&l);
+}
+
+void test_main_lklist()
 {
     test_case_0();  
     test_case_1();  
     test_case_2();  
+    test_case_3();  
     return;
 }

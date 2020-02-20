@@ -36,6 +36,7 @@ bool init_HashTable(HashTable *T, const size_t bucket_size)
 bool clear_HashTable(HashTable *T)
 {
     int i;
+    HashTableElement *previous=NULL, *current=NULL;
 
     if(T==NULL)
     {
@@ -46,7 +47,7 @@ bool clear_HashTable(HashTable *T)
     {
         if(T->bucket[i]!=NULL)
         {
-            HashTableElement *previous=NULL, *current=NULL;
+            previous = NULL;
             for(current=T->bucket[i]; current!=NULL; /*none*/)
             {
                 previous=current;
@@ -238,9 +239,9 @@ void* delete_HashTable(HashTable *T, const char *K)
         {
             T->bucket[index]=current->next;
         }
-        --(T->size);
         free(current->key);
         free(current);
+        --(T->size);
         return value_point;
     }
     else
@@ -253,7 +254,7 @@ void* delete_HashTable(HashTable *T, const char *K)
 /*
  *traverse hashelement one by one, but element order is not same to insert order
  */
-void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(const void *value_point))
+void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(char* key, void *value_point))
 {
     int i;
     TraverseAction_HashTable action;
@@ -271,7 +272,7 @@ void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(const 
             previous = NULL;
             for(current=T->bucket[i]; current!=NULL; /*none*/)
             {
-                action=handler(current->value_point);
+                action=handler(current->key, current->value_point);
                 switch(action)
                 {
                 case DO_NOTHING_HASHTABLE:    
@@ -313,6 +314,8 @@ void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(const 
                         current = T->bucket[i];
                     }
                     --(T->size);
+                    return;
+                default:
                     return;
                 }
             }

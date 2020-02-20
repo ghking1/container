@@ -50,7 +50,7 @@ void* popFront_LkList(LkList *L);                                    //pop front
 void* popBack_LkList(LkList *L);                                     //pop back
 
 //traverse all element one by one
-void traverse_LkList(LkList *L, TraverseAction_LkList (*handler)(const void *value_point));  
+void traverse_LkList(LkList *L, TraverseAction_LkList (*handler)(void *value_point));  
 
 #undef bool
 

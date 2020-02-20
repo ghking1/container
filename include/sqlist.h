@@ -51,7 +51,7 @@ void* popFront_SqList(SqList *L);                                    //pop front
 void* popBack_SqList(SqList *L);                                     //pop back
 
 //traverse all element one by one
-void traverse_SqList(SqList *L, TraverseAction_SqList (*handler)(const void *value_point));  
+void traverse_SqList(SqList *L, TraverseAction_SqList (*handler)(void *value_point));  
 
 #undef bool
 

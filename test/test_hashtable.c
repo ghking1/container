@@ -75,12 +75,55 @@ static void test_case_0()
     return;
 }
 
-static void test_case_1()
+static TraverseAction_HashTable handler(char* key, void *value_point)
 {
-    return;
+    switch((*(int*)value_point-1)%5 + 1)
+    {
+        case 1:
+            return DELETE_ELEMENT_HASHTABLE;
+        case 2:
+            return DO_NOTHING_HASHTABLE;
+        case 3:
+            return DELETE_ELEMENT_HASHTABLE;
+        case 4:
+            return DO_NOTHING_HASHTABLE;
+        case 5:
+            return DELETE_ELEMENT_HASHTABLE;
+        defalut:
+            assert(false);
+    }
 }
 
-void test_hashtable()
+//traverse
+static void test_case_1()
+{
+    HashTable t;
+    char key_temp[32];
+    int value_arr[10]={1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    int i=0;
+    HashTableElement *p=NULL;
+
+    //init
+    init_HashTable(&t, 3);
+
+    //set
+    for(i=0; i<10; ++i)
+    {
+        sprintf(key_temp,"%d",i+1); //transform int to string
+        p=set_HashTable(&t, key_temp, &value_arr[i]);
+        assert(*(int*)p->value_point == value_arr[i]);
+    }
+    assert(getSize_HashTable(&t) == 10);
+
+    //traverse
+    traverse_HashTable(&t, handler);
+    assert(getSize_HashTable(&t) == 4);
+
+    //destroy
+    destroy_HashTable(&t);
+}
+
+void test_main_hashtable()
 {
     test_case_0();
     test_case_1();

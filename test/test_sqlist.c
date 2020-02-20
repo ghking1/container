@@ -197,10 +197,72 @@ static void test_case_2()
     return;
 }
 
-void test_sqlist()
+static TraverseAction_SqList handler(void *value_point)
+{
+    switch(*(int*)value_point)
+    {
+        case 1:
+            return DELETE_ELEMENT_SQLIST;
+        case 2:
+            return DO_NOTHING_SQLIST;
+        case 3:
+            return DELETE_ELEMENT_SQLIST;
+        case 4:
+            return DO_NOTHING_SQLIST;
+        case 5:
+            return DELETE_ELEMENT_SQLIST;
+        defalut:
+            assert(false);
+    }
+}
+
+//traverse
+static void test_case_3()
+{
+    SqList l;
+    int arr[5]={1, 2, 3, 4, 5};
+    int i=0;
+    SqListElement *p=NULL;
+
+    //init
+    init_SqList(&l);
+
+    //pushBack, list value should be [1-> 2 -> 3 -> 4 -> 5]
+    for(i=0; i<5; ++i)
+    {
+        p=pushBack_SqList(&l, &arr[i]);
+        assert(*(int*)p->value_point == arr[i]);
+    }
+    assert(getSize_SqList(&l) == 5);
+
+    //traverse
+    traverse_SqList(&l, handler);
+    assert(getSize_SqList(&l) == 2);
+
+    p=getByVal_SqList(&l, &arr[0], compare);
+    assert(p==NULL);
+
+    p=getByVal_SqList(&l, &arr[1], compare);
+    assert(*(int*)p->value_point == arr[1]);
+
+    p=getByVal_SqList(&l, &arr[2], compare);
+    assert(p==NULL);
+
+    p=getByVal_SqList(&l, &arr[3], compare);
+    assert(*(int*)p->value_point == arr[3]);
+
+    p=getByVal_SqList(&l, &arr[4], compare);
+    assert(p==NULL);
+
+    //destroy
+    destroy_SqList(&l);
+}
+
+void test_main_sqlist()
 {
     test_case_0();  
     test_case_1();  
     test_case_2();  
+    test_case_3();  
     return;
 }
