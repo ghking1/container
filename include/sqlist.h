@@ -27,7 +27,7 @@ typedef enum _TraverseAction_SqList
 
 } TraverseAction_SqList;
 
-bool setCapacity_SqList(SqList *L, const size_t newCapacity);  //set size of space
+bool setCapacity_SqList(SqList *L, const size_t capacity);  //set size of space
 size_t getCapacity_SqList(const SqList *L);  //return size of space
 
 bool init_SqList(SqList *L);                 //initial it, successfully return true, failed return false

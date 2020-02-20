@@ -11,39 +11,40 @@
 #define false 0
 
 /*
- *adjust capacity of SqList, if appoint newCapacity==0 the newCapacity will be caculate autoly, otherwise it will use it directly
+ *adjust capacity of SqList, if appoint new_capacity==0 the new_capacity will be caculate autoly, otherwise it will use it directly
  */
-bool reAllocate(SqList* L, const size_t newCapacity)
+bool reAllocate(SqList* L, const size_t capacity)
 {
     SqListElement *temp;
+    size_t new_capacity=capacity;
 
     if(L==NULL)    //L==NULL, is invalid
     {
         return false;   
     }    
 
-    if(newCapacity==0)                              //if appoint newCapacity==0 the newCapacity will be caculate autoly
+    if(new_capacity==0)                              //if appoint new_capacity==0 the new_capacity will be caculate autoly
     {
         if(L->capacity ==0)                         //use CAPACITY_DEFAULT originally
         {
-            newCapacity=CAPACITY_DEFAULT;
+            new_capacity=CAPACITY_DEFAULT;
         }
         else if(L->capacity < CAPACITY_LINE_1)      //increase with 4 times
         {
-            newCapacity=4*L->capacity;
+            new_capacity=4*L->capacity;
         }
         else if(L->capacity < CAPACITY_LINE_2)      //increase with 2 times
         {
-            newCapacity=L->capacity+L->capacity;
+            new_capacity=L->capacity+L->capacity;
         }
         else                                        //increase stacically with CAPACITY_INCREASEMENT
         {
-            newCapacity=L->capacity+CAPACITY_INCREASEMENT;
+            new_capacity=L->capacity+CAPACITY_INCREASEMENT;
         }
     }
     
     temp = L->first;
-    L->first=(void *)realloc(L->first, newCapacity*sizeof(SqListElement));    //relloc new memory space
+    L->first=(void *)realloc(L->first, new_capacity*sizeof(SqListElement));    //relloc new memory space
     if(L->first == NULL)     //if relloc failed
     {
         L->first = temp;    //reset first point
@@ -51,7 +52,7 @@ bool reAllocate(SqList* L, const size_t newCapacity)
     }            
 
     L->last=L->first + (L->size-1);    //set new last point
-    L->capacity=newCapacity;   //set new capacity
+    L->capacity=new_capacity;   //set new capacity
     return true;
 }
 
@@ -130,19 +131,21 @@ bool isEmpty_SqList(const SqList *L)
 /*
  *set new size of space
  */
-bool setCapacity_SqList(SqList *L, const size_t newCapacity)
+bool setCapacity_SqList(SqList *L, const size_t capacity)
 {
-    if(L==NULL || newCapacity<L->size)    //L==NULL is invalid, newCapacity < size may cause lost of data
+    size_t new_capacity = capacity;
+
+    if(L==NULL || new_capacity<L->size)    //L==NULL is invalid, new_capacity < size may cause lost of data
     {
         return false;
     }    
 
-    if(newCapacity==L->capacity)     //newCapacity==oldCapacity, needn't reallocate
+    if(new_capacity==L->capacity)     //new_capacity==oldCapacity, needn't reallocate
     {
         return true;
     }
 
-    if(reAllocate(L, newCapacity))   //if reAllocate successfully return true
+    if(reAllocate(L, new_capacity))   //if reAllocate successfully return true
     {
         return true;
     }
@@ -301,7 +304,7 @@ SqListElement* getByVal_SqList(const SqList *L, const void *value_point, int (*c
         return NULL;
     }    
 
-    if(size==0 || value_point==NULL || compare==NULL)
+    if(L->size==0 || value_point==NULL || compare==NULL)
     {
         return NULL;
     }
@@ -310,11 +313,11 @@ SqListElement* getByVal_SqList(const SqList *L, const void *value_point, int (*c
     {
         if(compare((L->first+i)->value_point, value_point)==0)    //when two value equals, stop!
         {
-            break;
+            return L->first+i;
         }
     }
     
-    return p;
+    return NULL;
 }    
 
 
@@ -335,7 +338,7 @@ SqListElement* insert_SqList(SqList *L, const SqListElement *current, const void
         return NULL;
     }
     
-    if(size == L->capacity)    //free space is not enough
+    if(L->size == L->capacity)    //free space is not enough
     {
         if(!reAllocate(L, 0))
         {
@@ -365,7 +368,7 @@ void* delete_SqList(SqList *L, const SqListElement *current)
     void *value_point=current->value_point;    //save value_point 
     SqListElement *p=NULL;                    
 
-    if(L==NULL || size==0 || current==NULL)   //NULL, is invalid
+    if(L==NULL || L->size==0 || current==NULL)   //NULL, is invalid
     { 
         return NULL;
     }    
