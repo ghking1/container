@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include "../include/sqlist.h"
 
-#define CAPACITY_DEFAULT 8
-#define CAPACITY_LINE_1 128
-#define CAPACITY_LINE_2 1024
+#define CAPACITY_DEFAULT 32 
+#define CAPACITY_LINE_1  128
+#define CAPACITY_LINE_2  1024
 #define CAPACITY_INCREASEMENT 1024
 
 #define bool int
@@ -44,8 +44,8 @@ bool reAllocate(SqList* L, const size_t capacity)
     }
     
     temp = L->first;
-    L->first=(void *)realloc(L->first, new_capacity*sizeof(SqListElement));    //relloc new memory space
-    if(L->first == NULL)     //if relloc failed
+    L->first=(SqListElement*)realloc(L->first, new_capacity*sizeof(SqListElement));    //relloc new memory space
+    if(L->first == NULL)    //if realloc failed
     {
         L->first = temp;    //reset first point
         return false;
@@ -221,7 +221,7 @@ SqListElement* getLast_SqList(const SqList *L)
         return NULL;
     }
 
-    return L->first + (L->size -1);
+    return (L->first + (L->size -1));
 }
 
 
@@ -256,7 +256,7 @@ SqListElement* getNext_SqList(const SqList *L, const SqListElement *current)
         return NULL;
     }    
 
-    if(current==NULL || L->size==0 || current >= L->first + (L->size -1))  //last element has no next element
+    if(current==NULL || L->size==0 || current >= (L->first + (L->size -1)))  //last element has no next element
     {
         return NULL;
     }
@@ -283,7 +283,7 @@ SqListElement* getByOrd_SqList(const SqList *L, const size_t order)
     }
     else
     {
-        return L->first+(order-1);
+        return L->first + (order-1);
     }
 }    
 
@@ -320,9 +320,10 @@ SqListElement* getByVal_SqList(const SqList *L, const void *value_point, int (*c
 /*
  *insert before current element
  */
-SqListElement* insert_SqList(SqList *L, const SqListElement *current, const void *value_point)
+SqListElement* insert_SqList(SqList *L, SqListElement *current, const void *value_point)
 {
     SqListElement *p=NULL;                    
+    size_t current_offset;
 
     if(L==NULL)    //NULL, is invalid
     { 
@@ -336,13 +337,19 @@ SqListElement* insert_SqList(SqList *L, const SqListElement *current, const void
     
     if(L->size == L->capacity)    //free space is not enough
     {
-        if(!reAllocate(L, 0))
+        current_offset = current - L->first;
+        if(reAllocate(L, 0))
+        {
+            //current point should be relocated after realloc
+            current = L->first + current_offset;
+        }
+        else
         {
             return NULL;
         }
     }
 
-    //move all elements after current back, including current
+    //move all elements after current one step, including current
     for(p=(L->first + L->size); p!=current; --p)
     {
         *p=*(p-1);
@@ -358,9 +365,9 @@ SqListElement* insert_SqList(SqList *L, const SqListElement *current, const void
 /*
  *delete current element, return value_point of it
  */
-void* delete_SqList(SqList *L, const SqListElement *current)    
+void* delete_SqList(SqList *L, SqListElement *current)    
 {
-    void *value_point=current->value_point;    //save value_point 
+    void *value_point=NULL;
     SqListElement *p=NULL;                    
 
     if(L==NULL || L->size==0 || current==NULL)   //NULL, is invalid
@@ -368,8 +375,10 @@ void* delete_SqList(SqList *L, const SqListElement *current)
         return NULL;
     }    
 
+    value_point = current->value_point; //save value_point 
+
     //move all elements after current forward, excluding current
-    for(p=(SqListElement*)current; p!=(L->first + (L->size - 1)); ++p)    //here need do an force type transform: from const to normal!
+    for(p=current; p!=(L->first + (L->size - 1)); ++p)    //here need do an force type transform: from const to normal!
     {
         *p=*(p+1);
     }

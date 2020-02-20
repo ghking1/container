@@ -295,7 +295,7 @@ void* delete_LkList(LkList *L, LkListElement *current)
 {
     void *value_point=NULL;    
 
-    if(L==NULL || current==NULL)   //NULL, is invalid
+    if(L==NULL || L->size==0 || current==NULL)   //NULL, is invalid
     { 
         return NULL;
     }    
@@ -336,10 +336,6 @@ LkListElement* pushBack_LkList(LkList *L, const void *value_point)
  */
 void* popFront_LkList(LkList *L)    
 {    
-    if(L->size==0)
-    {
-        return NULL;
-    }
     return delete_LkList(L, L->head->next);
 }
 
@@ -349,10 +345,6 @@ void* popFront_LkList(LkList *L)
  */
 void* popBack_LkList(LkList *L)                                                                                        
 {
-    if(L->size==0)
-    {
-        return NULL;
-    }
     return delete_LkList(L, L->tail->prev);
 }
 

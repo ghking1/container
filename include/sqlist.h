@@ -42,8 +42,8 @@ SqListElement* getNext_SqList(const SqList *L, const SqListElement *current);  /
 SqListElement* getByOrd_SqList(const SqList *L, const size_t order);           //get element by order
 SqListElement* getByVal_SqList(const SqList *L, const void *value_point, int (*compare)(const void *value_point1, const void *value_point2));  //get element by value    
 
-SqListElement* insert_SqList(SqList *L, const SqListElement *current, const void *value_point2);  //insert before current element
-void* delete_SqList(SqList *L, const SqListElement *current);       //delete current element, return value_point of it
+SqListElement* insert_SqList(SqList *L, SqListElement *current, const void *value_point2);  //insert before current element
+void* delete_SqList(SqList *L, SqListElement *current);       //delete current element, return value_point of it
 
 SqListElement* pushFront_SqList(SqList *L, const void *value_point); //push front
 SqListElement* pushBack_SqList(SqList *L, const void *value_point);  //push back

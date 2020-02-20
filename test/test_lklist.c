@@ -6,7 +6,7 @@
 #define true 1
 #define false 0
 
-int lklist_compare(const void*a, const void*b)
+static int compare(const void*a, const void*b)
 {
     if(*(int*)a == *(int*)b)
     {
@@ -19,7 +19,7 @@ int lklist_compare(const void*a, const void*b)
 }
 
 //init, clear, destroy, insert, delete, getByOrd, getByVal
-void test_case_0()
+static void test_case_0()
 {
     LkList l;
     int arr[5]={3, 2, 1, 5, 4};
@@ -63,39 +63,40 @@ void test_case_0()
     //getByVal
     for(i=0; i<5; ++i)
     {
-        p=getByVal_LkList(&l, &arr[i], lklist_compare);
+        p=getByVal_LkList(&l, &arr[i], compare);
         assert(*(int*)p->value_point == arr[i]);
     }
-    p=getByVal_LkList(&l, &a, lklist_compare);  //a==0
+    p=getByVal_LkList(&l, &a, compare);  //a==0
     assert(p==NULL);
-    p=getByVal_LkList(&l, &b, lklist_compare);  //b==6
+    p=getByVal_LkList(&l, &b, compare);  //b==6
     assert(p==NULL);
 
     //delete
-    p=getByVal_LkList(&l, &arr[0], lklist_compare);
+    p=getByVal_LkList(&l, &arr[0], compare);
     v=delete_LkList(&l, p);
     assert(*(int*)v == arr[0]);
-    p=getByVal_LkList(&l, &arr[1], lklist_compare);
+    p=getByVal_LkList(&l, &arr[1], compare);
     v=delete_LkList(&l, p);
     assert(*(int*)v == arr[1]);
-    p=getByVal_LkList(&l, &arr[2], lklist_compare);
+    p=getByVal_LkList(&l, &arr[2], compare);
     v=delete_LkList(&l, p);
     assert(*(int*)v == arr[2]);
-    p=getByVal_LkList(&l, &arr[3], lklist_compare);
+    p=getByVal_LkList(&l, &arr[3], compare);
     v=delete_LkList(&l, p);
     assert(*(int*)v == arr[3]);
-    p=getByVal_LkList(&l, &arr[4], lklist_compare);
+    p=getByVal_LkList(&l, &arr[4], compare);
     v=delete_LkList(&l, p);
     assert(*(int*)v == arr[4]);
 
     assert(isEmpty_LkList(&l)==true);
 
     //clear
-    for(i=0; i<5; ++i)
+    for(i=0; i<1024; ++i)
     {
-        insert_LkList(&l, l.tail, &arr[0]);
+        p=insert_LkList(&l, l.tail, &a);
+        assert(*(int*)p->value_point == a);
     }
-    assert(getSize_LkList(&l)==5);
+    assert(getSize_LkList(&l)==1024);
     clear_LkList(&l);
     assert(isEmpty_LkList(&l)==true);
 
@@ -109,7 +110,7 @@ void test_case_0()
 }
 
 //pushBack, getFirst, getNext, popBack
-void test_case_1()
+static void test_case_1()
 {
     LkList l;
     int arr[5]={1, 2, 3, 4, 5};
@@ -152,7 +153,7 @@ void test_case_1()
 }
 
 //pushFront, getLast, getPrev, popFront
-void test_case_2()
+static void test_case_2()
 {
     LkList l;
     int arr[5]={5, 4, 3, 2, 1};
