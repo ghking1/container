@@ -1,5 +1,4 @@
 # container
-***********************************************************************
 c container lib, include link list, squence list and hashtable.
 
 ### quick start
