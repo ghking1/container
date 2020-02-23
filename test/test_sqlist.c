@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
-#include "../include/sqlist.h"
+#include "../src/sqlist.h"
 
 #define bool int
 #define true 1

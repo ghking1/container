@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
-#include "../include/hashtable.h"
+#include "hashtable.h"
 
 #define bool int
 #define true 1

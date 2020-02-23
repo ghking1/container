@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
-#include "../include/lklist.h"
+#include "../src/lklist.h"
 
 #define bool int
 #define true 1

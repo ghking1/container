@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "../include/sqlist.h"
+#include "sqlist.h"
 
 #define CAPACITY_DEFAULT 32 
 #define CAPACITY_LINE_1  128

@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "../include/lklist.h"
+#include "lklist.h"
 
 #define bool int
 #define true 1

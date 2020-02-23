@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
-#include "../include/hashtable.h"
+#include "../src/hashtable.h"
 
 #define bool int
 #define true 1

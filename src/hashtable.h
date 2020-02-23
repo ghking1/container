@@ -34,9 +34,9 @@ bool destroy_HashTable(HashTable *T);                        //destroy it
 bool isEmpty_HashTable(const HashTable *T);                  //is empty return true, else return false
 size_t getSize_HashTable(const HashTable *T);                //return size of elements
 
-HashTableElement* get_HashTable(const HashTable *T, const char *K);             //get element by key
-HashTableElement* set_HashTable(HashTable *T, const char *K, const void *value_point); //set element by key
-void* delete_HashTable(HashTable *T, const char *K);                            //delete element by key
+HashTableElement* get_HashTable(const HashTable *T, const char *K);             //get element by key, return null if key not found
+HashTableElement* set_HashTable(HashTable *T, const char *K, const void *value_point); //set element by key, return null if failed
+void* delete_HashTable(HashTable *T, const char *K);                            //delete element by key, return null if failed
 
 //traverse all element one by one, but element order is not same to insert order 
 void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(char* key, void *value_point));  
