@@ -37,6 +37,19 @@ int main(int argc, char **argv)
 
 ```
 
+### run test
+1. you can use make to run test code in linux
+```
+cd test
+make
+./test.exe
+
+```
+
+2. you also can use vs to run test code in windows
+
+double click vs2015_project/container.sln, and run it in vs.
+
 ### details
 you can take a look at test code, and header files has interface explaination.
 
