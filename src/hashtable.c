@@ -125,6 +125,8 @@ size_t BKDRHash(const char *S)
         //equal to hash = hash << 7 + hash << 1 + hash + c;
         hash = hash*131 + c;   
     }
+    
+    return hash;
 }
 
 
@@ -190,7 +192,7 @@ HashTableElement* set_HashTable(HashTable *T, const char *K, const void *value_p
     {
         //create new HashTableElement
         E=(HashTableElement*)malloc(sizeof(HashTableElement));
-        E->key=(char*)malloc(sizeof(char)*strlen(K));
+        E->key=(char*)malloc(sizeof(char)*strlen(K)+1);
         strcpy(E->key, K);          //use key copy, but not reference
         E->value_point=(void*)value_point;   
         E->next=T->bucket[index];   //put new element in the first place of key mapped bucket
