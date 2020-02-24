@@ -1,2 +1,10 @@
 *.o
 *.exe
+
+vs2015_project/**/*
+!vs2015_project/container
+!vs2015_project/container.sln
+
+vs2015_project/container/**/*
+!vs2015_project/container/container.vcxproj
+!vs2015_project/container/container.vcxproj.filters
