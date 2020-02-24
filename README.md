@@ -4,6 +4,7 @@ c container lib, include link list, squence list and hashtable.
 ### quick start
 1. copy .h and .c files to your project
 2. include .h file in your source code
+4. if you use vs compiler you may need define "_CRT_SECURE_NO_WARNINGS" for the preprocessor
 3. use it like fowllowing
 ```
 #include <stdlib.h>
