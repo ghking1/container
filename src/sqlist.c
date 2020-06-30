@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include "sqlist.h"
 
-#define CAPACITY_DEFAULT 32 
-#define CAPACITY_LINE_1  128
-#define CAPACITY_LINE_2  1024
+#define CAPACITY_DEFAULT      32 
+#define CAPACITY_LINE_1       128
+#define CAPACITY_LINE_2       1024
 #define CAPACITY_INCREASEMENT 1024
 
 #define bool int
@@ -15,7 +15,7 @@
  */
 bool reAllocate(SqList* L, const size_t capacity)
 {
-    SqListElement *temp;
+    SqListNode *temp;
     size_t new_capacity=capacity;
 
     if(L==NULL)    //L==NULL, is invalid
@@ -44,7 +44,7 @@ bool reAllocate(SqList* L, const size_t capacity)
     }
     
     temp = L->first;
-    L->first=(SqListElement*)realloc(L->first, new_capacity*sizeof(SqListElement));    //relloc new memory space
+    L->first=(SqListNode*)realloc(L->first, new_capacity*sizeof(SqListNode));    //relloc new memory space
     if(L->first == NULL)    //if realloc failed
     {
         L->first = temp;    //reset first point
@@ -75,7 +75,7 @@ bool init_SqList(SqList *L)
 
 
 /*
- *clear all element in it, you must handle all value_point in it yourself before clear it
+ *clear all node in it, you must handle all data in it yourself before clear it
  */
 bool clear_SqList(SqList *L)                
 {
@@ -91,7 +91,7 @@ bool clear_SqList(SqList *L)
 
 
 /*
- *destroy it, you must handle all value_point in it yourself before clear it
+ *destroy it, you must handle all data in it yourself before clear it
  */
 bool destroy_SqList(SqList *L)
 {
@@ -125,7 +125,7 @@ bool isEmpty_SqList(const SqList *L)
 
 
 /*
- *return size of elements
+ *return size of nodes
  */
 size_t getSize_SqList(const SqList *L)            
 {
@@ -182,15 +182,15 @@ size_t getCapacity_SqList(const SqList *L)
 
 /*********************************************************************
  * all of follow points returned maybe NULL, that means encountered  *
- * some error,like:can't find your element or can't insert/delete    *
- * your element.why? maybe you give an position out of range or other*
+ * some error,like:can't find your node or can't insert/delete    *
+ * your node.why? maybe you give an position out of range or other*
  * problems.                                                         *
  *********************************************************************/
 
 /*
- *return first element of it
+ *return first node of it
  */
-SqListElement* getFirst_SqList(const SqList *L)                                                                        
+SqListNode* getFirst_SqList(const SqList *L)                                                                        
 {
     if(L==NULL)    //L==NULL, is invalid
     {
@@ -207,9 +207,9 @@ SqListElement* getFirst_SqList(const SqList *L)
 
 
 /*
- *return last element of it
+ *return last node of it
  */
-SqListElement* getLast_SqList(const SqList *L)                                                                        
+SqListNode* getLast_SqList(const SqList *L)                                                                        
 {
     if(L==NULL)    //L==NULL, is invalid
     {
@@ -228,20 +228,20 @@ SqListElement* getLast_SqList(const SqList *L)
 /*
  *return prevElemet of it
  */
-SqListElement* getPrev_SqList(const SqList *L, const SqListElement *current)                                            
+SqListNode* getPrev_SqList(const SqList *L, const SqListNode *current)                                            
 {
     if(L==NULL)    //NULL, is invalid
     { 
         return NULL;
     }    
 
-    if(current==NULL || L->size==0 || current==L->first) //first element has no prev element
+    if(current==NULL || L->size==0 || current==L->first) //first node has no prev node
     {
         return NULL;
     }
     else
     {
-        return (SqListElement*)current-1;
+        return (SqListNode*)current-1;
     }
 }
 
@@ -249,28 +249,28 @@ SqListElement* getPrev_SqList(const SqList *L, const SqListElement *current)
 /*
  *return nextElement of it
  */
-SqListElement* getNext_SqList(const SqList *L, const SqListElement *current)                                            
+SqListNode* getNext_SqList(const SqList *L, const SqListNode *current)                                            
 {
     if(L==NULL)    //NULL, is invalid
     { 
         return NULL;
     }    
 
-    if(current==NULL || L->size==0 || current >= (L->first + (L->size -1)))  //last element has no next element
+    if(current==NULL || L->size==0 || current >= (L->first + (L->size -1)))  //last node has no next node
     {
         return NULL;
     }
     else
     {
-        return (SqListElement*)current+1;
+        return (SqListNode*)current+1;
     }
 }
 
 
 /*
- *get element by order
+ *get node by order
  */
-SqListElement* getByOrd_SqList(const SqList *L, const size_t order)
+SqListNode* getByOrd_SqList(const SqList *L, const size_t order)
 {
     if(L==NULL)    //L==NULL, is invalid
     {
@@ -289,9 +289,9 @@ SqListElement* getByOrd_SqList(const SqList *L, const size_t order)
 
 
 /*
- *get element by value
+ *get node by value
  */
-SqListElement* getByVal_SqList(const SqList *L, const void *value_point, int (*compare)(const void *value_point1, const void *value_point2))
+SqListNode* getByVal_SqList(const SqList *L, const void *data, int (*compare)(const void *data1, const void *data2))
 {
     int i;
 
@@ -300,14 +300,14 @@ SqListElement* getByVal_SqList(const SqList *L, const void *value_point, int (*c
         return NULL;
     }    
 
-    if(L->size==0 || value_point==NULL || compare==NULL)
+    if(L->size==0 || data==NULL || compare==NULL)
     {
         return NULL;
     }
 
     for(i=0; i<L->size; ++i)    //search from L->first
     {
-        if(compare((L->first+i)->value_point, value_point)==0)    //when two value equals, stop!
+        if(compare((L->first+i)->data, data)==0)    //when two value equals, stop!
         {
             return L->first+i;
         }
@@ -318,11 +318,11 @@ SqListElement* getByVal_SqList(const SqList *L, const void *value_point, int (*c
 
 
 /*
- *insert before current element
+ *insert before current node
  */
-SqListElement* insert_SqList(SqList *L, SqListElement *current, const void *value_point)
+SqListNode* insert_SqList(SqList *L, SqListNode *current, const void *data)
 {
-    SqListElement *p=NULL;                    
+    SqListNode *p=NULL;                    
     size_t current_offset;
 
     if(L==NULL)    //NULL, is invalid
@@ -330,7 +330,7 @@ SqListElement* insert_SqList(SqList *L, SqListElement *current, const void *valu
         return NULL;
     }    
 
-    if(current==NULL || value_point==NULL)
+    if(current==NULL || data==NULL)
     {
         return NULL;
     }
@@ -349,13 +349,13 @@ SqListElement* insert_SqList(SqList *L, SqListElement *current, const void *valu
         }
     }
 
-    //move all elements after current one step, including current
+    //move all nodes after current one step, including current
     for(p=(L->first + L->size); p!=current; --p)
     {
         *p=*(p-1);
     }
     
-    p->value_point=(void *)value_point;        //const point transmit to normal
+    p->data=(void *)data;        //const point transmit to normal
     ++(L->size);
 
     return p;
@@ -363,21 +363,21 @@ SqListElement* insert_SqList(SqList *L, SqListElement *current, const void *valu
 
 
 /*
- *delete current element, return value_point of it
+ *delete current node, return data of it
  */
-void* delete_SqList(SqList *L, SqListElement *current)    
+void* delete_SqList(SqList *L, SqListNode *current)    
 {
-    void *value_point=NULL;
-    SqListElement *p=NULL;                    
+    void *data=NULL;
+    SqListNode *p=NULL;                    
 
     if(L==NULL || L->size==0 || current==NULL)   //NULL, is invalid
     { 
         return NULL;
     }    
 
-    value_point = current->value_point; //save value_point 
+    data = current->data; //save data 
 
-    //move all elements after current forward, excluding current
+    //move all nodes after current forward, excluding current
     for(p=current; p!=(L->first + (L->size - 1)); ++p)    //here need do an force type transform: from const to normal!
     {
         *p=*(p+1);
@@ -385,25 +385,25 @@ void* delete_SqList(SqList *L, SqListElement *current)
 
     --(L->size);
 
-    return value_point;
+    return data;
 }    
 
 
 /*
  *push front
  */
-SqListElement* pushFront_SqList(SqList *L, const void *value_point)
+SqListNode* pushFront_SqList(SqList *L, const void *data)
 {
-    return insert_SqList(L, L->first, value_point);
+    return insert_SqList(L, L->first, data);
 }
 
 
 /*
  *push back
  */
-SqListElement* pushBack_SqList(SqList *L, const void *value_point)
+SqListNode* pushBack_SqList(SqList *L, const void *data)
 {
-    return insert_SqList(L, L->first + L->size, value_point);
+    return insert_SqList(L, L->first + L->size, data);
 }
 
 
@@ -426,12 +426,12 @@ void* popBack_SqList(SqList *L)
 
 
 /*
- *traverse element one by one
+ *traverse node one by one
  */
-void traverse_SqList(SqList *L, TraverseAction_SqList (*handler)(void *value_point))
+void traverse_SqList(SqList *L, TraverseAction_SqList (*handler)(void *data))
 {
-    SqListElement *p=NULL;
-    SqListElement *previous=NULL, *current=NULL;
+    SqListNode *p=NULL;
+    SqListNode *previous=NULL, *current=NULL;
     TraverseAction_SqList action;
 
     if(L==NULL)
@@ -442,22 +442,22 @@ void traverse_SqList(SqList *L, TraverseAction_SqList (*handler)(void *value_poi
     previous = NULL;
     for(current=L->first; current!=(L->first + L->size); /*none*/)    //search from L->first
     {
-        action=handler(current->value_point);
+        action=handler(current->data);
         switch(action)
         {
-        case DO_NOTHING_SQLIST:    
+        case SQLIST_CONTINUE:    
             ++current;
             break;
-        case DELETE_ELEMENT_SQLIST:
+        case SQLIST_DELETE_NODE:
             for(p=current; p!=(L->first + (L->size - 1)); ++p)
             {
                 *p=*(p+1);
             }
             --(L->size);
             break;
-        case STOP_TRAVERSE_SQLIST: 
+        case SQLIST_STOP_TRAVERSE: 
             return;
-        case DELETE_AND_STOP_SQLIST:                    
+        case SQLIST_DELETE_AND_STOP:                    
             for(p=current; p!=(L->first + (L->size - 1)); ++p)
             {
                 *p=*(p+1);

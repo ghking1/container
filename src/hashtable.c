@@ -20,23 +20,23 @@ bool init_HashTable(HashTable *T, const size_t bucket_size)
 
     T->bucket_size=bucket_size;
     T->size=0;
-    T->bucket=(HashTableElement**)malloc(sizeof(HashTableElement*)*bucket_size);
+    T->bucket=(HashTableNode**)malloc(sizeof(HashTableNode*)*bucket_size);
 
     for(i=0; i<bucket_size; ++i)
     {
-        T->bucket[i]=NULL;  //all bucket has no element when init
+        T->bucket[i]=NULL;  //all bucket has no node when init
     }
     return true;
 }
 
 
 /*
- *clear all element in hashtable, you must handle all value_point in it yourself before clear it
+ *clear all node in hashtable, you must handle all data in it yourself before clear it
  */
 bool clear_HashTable(HashTable *T)
 {
     int i;
-    HashTableElement *previous=NULL, *current=NULL;
+    HashTableNode *previous=NULL, *current=NULL;
 
     if(T==NULL)
     {
@@ -52,7 +52,7 @@ bool clear_HashTable(HashTable *T)
             {
                 previous=current;
                 current=current->next;
-                free(previous->key);  //key is copyed when set element, so it should be free by this library
+                free(previous->key);  //key is copyed when set node, so it should be free by this library
                 free(previous);
             }
             T->bucket[i]=NULL;
@@ -64,7 +64,7 @@ bool clear_HashTable(HashTable *T)
 
 
 /*
- *destroy hashtable, you must handle all value_point in it yourself before clear it
+ *destroy hashtable, you must handle all data in it yourself before clear it
  */
 bool destroy_HashTable(HashTable *T)
 {
@@ -73,7 +73,7 @@ bool destroy_HashTable(HashTable *T)
         return false;
     }
 
-    clear_HashTable(T); //first free elements
+    clear_HashTable(T); //first free nodes
     free(T->bucket);    //then free bucket
 
     T->bucket=NULL;
@@ -131,12 +131,12 @@ size_t BKDRHash(const char *S)
 
 
 /*
- *get hashelement by key
+ *get hashnode by key
  */
-HashTableElement* get_HashTable(const HashTable *T, const char *K)
+HashTableNode* get_HashTable(const HashTable *T, const char *K)
 {
     size_t index = BKDRHash(K) % T->bucket_size;
-    HashTableElement *current=NULL;
+    HashTableNode *current=NULL;
 
     if(T==NULL || K==NULL)
     {
@@ -160,11 +160,11 @@ HashTableElement* get_HashTable(const HashTable *T, const char *K)
 /*
  *set hashvalue by key
  */
-HashTableElement* set_HashTable(HashTable *T, const char *K, const void *value_point)
+HashTableNode* set_HashTable(HashTable *T, const char *K, const void *data)
 {
     size_t index = BKDRHash(K) % T->bucket_size;
-    HashTableElement *current = NULL;
-    HashTableElement *E = NULL;
+    HashTableNode *current = NULL;
+    HashTableNode *E = NULL;
 
     if(T==NULL || K==NULL)
     {
@@ -185,18 +185,18 @@ HashTableElement* set_HashTable(HashTable *T, const char *K, const void *value_p
     if(current!=NULL)  
     {
         //key is exist, user must delete it manually first
-        //because cover value_point directly may cause memory leak
+        //because cover data directly may cause memory leak
         return NULL;
     }
     else 
     {
         //create new HashTableElement
-        E=(HashTableElement*)malloc(sizeof(HashTableElement));
+        E=(HashTableNode*)malloc(sizeof(HashTableNode));
         E->key=(char*)malloc(sizeof(char)*strlen(K)+1);
         strcpy(E->key, K);          //use key copy, but not reference
-        E->value_point=(void*)value_point;   
-        E->next=T->bucket[index];   //put new element in the first place of key mapped bucket
-        T->bucket[index]=E;         //bucket first element point to this new element
+        E->data=(void*)data;   
+        E->next=T->bucket[index];   //put new node in the first place of key mapped bucket
+        T->bucket[index]=E;         //bucket first node point to this new node
         ++(T->size);
         return E;
     }
@@ -204,13 +204,13 @@ HashTableElement* set_HashTable(HashTable *T, const char *K, const void *value_p
 
 
 /*
- *delete hashelement by key
+ *delete hashnode by key
  */
-void* delete_HashTable(HashTable *T, const char *K)
+void* del_HashTable(HashTable *T, const char *K)
 {
     size_t index = BKDRHash(K) % T->bucket_size;
-    HashTableElement *previous=NULL, *current=NULL;
-    void *value_point = NULL;
+    HashTableNode *previous=NULL, *current=NULL;
+    void *data = NULL;
 
     if(T==NULL || K==NULL)
     {
@@ -232,19 +232,19 @@ void* delete_HashTable(HashTable *T, const char *K)
 
     if(current!=NULL)
     {
-        value_point=current->value_point;
-        if(previous!=NULL)  //finded element not in the first place
+        data=current->data;
+        if(previous!=NULL)  //finded node not in the first place
         {
             previous->next=current->next;
         }
-        else                //finded element is the first element of key mapped bucket
+        else                //finded node is the first node of key mapped bucket
         {
             T->bucket[index]=current->next;
         }
         free(current->key);
         free(current);
         --(T->size);
-        return value_point;
+        return data;
     }
     else
     {
@@ -254,13 +254,13 @@ void* delete_HashTable(HashTable *T, const char *K)
 
 
 /*
- *traverse hashelement one by one, but element order is not same to insert order
+ *traverse hashnode one by one, but node order is not same to insert order
  */
-void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(char* key, void *value_point))
+void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(char* key, void *data))
 {
     int i;
     TraverseAction_HashTable action;
-    HashTableElement *previous=NULL, *current=NULL;
+    HashTableNode *previous=NULL, *current=NULL;
 
     if(T==NULL)
     {
@@ -274,22 +274,22 @@ void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(char* 
             previous = NULL;
             for(current=T->bucket[i]; current!=NULL; /*none*/)
             {
-                action=handler(current->key, current->value_point);
+                action=handler(current->key, current->data);
                 switch(action)
                 {
-                case DO_NOTHING_HASHTABLE:    
+                case HASHTABLE_CONTINUE:    
                     previous = current;
                     current = current->next;
                     break;
-                case DELETE_ELEMENT_HASHTABLE:
-                    if(previous!=NULL)  //current element not in the first place
+                case HASHTABLE_DELETE_NODE:
+                    if(previous!=NULL)  //current node not in the first place
                     {
                         previous->next=current->next;
                         free(current->key);
                         free(current);
                         current = previous->next;
                     }
-                    else                //finded element is the first element of key mapped bucket
+                    else                //finded node is the first node of key mapped bucket
                     {
                         T->bucket[i]=current->next;
                         free(current->key);
@@ -298,17 +298,17 @@ void traverse_HashTable(HashTable *T, TraverseAction_HashTable (*handler)(char* 
                     }
                     --(T->size);
                     break;
-                case STOP_TRAVERSE_HASHTABLE: 
+                case HASHTABLE_STOP_TRAVERSE: 
                     return;
-                case DELETE_AND_STOP_HASHTABLE:                    
-                    if(previous!=NULL)  //current element not in the first place
+                case HASHTABLE_DELETE_AND_STOP:                    
+                    if(previous!=NULL)  //current node not in the first place
                     {
                         previous->next=current->next;
                         free(current->key);
                         free(current);
                         current = previous->next;
                     }
-                    else                //finded element is the first element of key mapped bucket
+                    else                //finded node is the first node of key mapped bucket
                     {
                         T->bucket[i]=current->next;
                         free(current->key);

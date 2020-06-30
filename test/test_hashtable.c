@@ -14,7 +14,7 @@ static void test_case_0()
     int value_arr[10]={1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     int i=0, a=0;
     void *v=NULL;
-    HashTableElement *p=NULL;
+    HashTableNode *p=NULL;
 
     //init
     init_HashTable(&t, 3);
@@ -27,7 +27,7 @@ static void test_case_0()
     {
         sprintf(key_temp,"%d",i+1); //transform int to string
         p=set_HashTable(&t, key_temp, &value_arr[i]);
-        assert(*(int*)p->value_point == value_arr[i]);
+        assert(*(int*)p->data == value_arr[i]);
     }
     p=set_HashTable(&t, "1", &a);
     assert(p==NULL);
@@ -38,7 +38,7 @@ static void test_case_0()
     {
         sprintf(key_temp,"%d",i+1); //transform int to string
         p=get_HashTable(&t, key_temp);
-        assert(*(int*)p->value_point == value_arr[i]);
+        assert(*(int*)p->data == value_arr[i]);
     }
     p=get_HashTable(&t, "zero");
     assert(p==NULL);
@@ -48,7 +48,7 @@ static void test_case_0()
     for(i=0; i<10; ++i)
     {
         sprintf(key_temp,"%d",i+1); //transform int to string
-        v=delete_HashTable(&t, key_temp);
+        v=del_HashTable(&t, key_temp);
         assert(*(int*)v == value_arr[i]);
     }
     v=get_HashTable(&t, "zero");
@@ -60,7 +60,7 @@ static void test_case_0()
     {
         sprintf(key_temp,"%d",i+1); //transform int to string
         p=set_HashTable(&t, key_temp, &a);
-        assert(*(int*)p->value_point == a);
+        assert(*(int*)p->data == a);
     }
     assert(getSize_HashTable(&t)==1024);
     clear_HashTable(&t);
@@ -80,15 +80,15 @@ static TraverseAction_HashTable handler(char* key, void *value_point)
     switch((*(int*)value_point-1)%5 + 1)
     {
         case 1:
-            return DELETE_ELEMENT_HASHTABLE;
+            return HASHTABLE_DELETE_NODE;
         case 2:
-            return DO_NOTHING_HASHTABLE;
+            return HASHTABLE_CONTINUE;
         case 3:
-            return DELETE_ELEMENT_HASHTABLE;
+            return HASHTABLE_DELETE_NODE;
         case 4:
-            return DO_NOTHING_HASHTABLE;
+            return HASHTABLE_CONTINUE;
         case 5:
-            return DELETE_ELEMENT_HASHTABLE;
+            return HASHTABLE_DELETE_NODE;
         defalut:
             assert(false);
     }
@@ -101,7 +101,7 @@ static void test_case_1()
     char key_temp[32];
     int value_arr[10]={1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     int i=0;
-    HashTableElement *p=NULL;
+    HashTableNode *p=NULL;
 
     //init
     init_HashTable(&t, 3);
@@ -111,7 +111,7 @@ static void test_case_1()
     {
         sprintf(key_temp,"%d",i+1); //transform int to string
         p=set_HashTable(&t, key_temp, &value_arr[i]);
-        assert(*(int*)p->value_point == value_arr[i]);
+        assert(*(int*)p->data == value_arr[i]);
     }
     assert(getSize_HashTable(&t) == 10);
 

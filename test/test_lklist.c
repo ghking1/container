@@ -25,27 +25,25 @@ static void test_case_0()
     int arr[5]={3, 2, 1, 5, 4};
     int i=0, a=0, b=6;
     void *v=NULL;
-    LkListElement *p=NULL;
+    LkListNode *p=NULL;
 
     //init
     init_LkList(&l);
     assert(l.size == 0);
-    assert(l.head != NULL);
-    assert(l.tail!= NULL);
-    assert(l.head->next == l.tail);
-    assert(l.tail->prev == l.head);
+    assert(l.guard.next == &l.guard);
+    assert(l.guard.prev == &l.guard);
 
     //insert, list value should be [1-> 2 -> 3 -> 4 -> 5]
-    p=insert_LkList(&l, l.tail, &arr[0]);
-    assert(*(int*)p->value_point == arr[0]);
+    p=insert_LkList(&l, l.guard, &arr[0]);
+    assert(*(int*)p->data == arr[0]);
     p=insert_LkList(&l, p, &arr[1]);
-    assert(*(int*)p->value_point == arr[1]);
+    assert(*(int*)p->data == arr[1]);
     p=insert_LkList(&l, p, &arr[2]);
-    assert(*(int*)p->value_point == arr[2]);
-    p=insert_LkList(&l, l.tail, &arr[3]);
-    assert(*(int*)p->value_point == arr[3]);
+    assert(*(int*)p->data == arr[2]);
+    p=insert_LkList(&l, &l.guard, &arr[3]);
+    assert(*(int*)p->data == arr[3]);
     p=insert_LkList(&l, p, &arr[4]);
-    assert(*(int*)p->value_point == arr[4]);
+    assert(*(int*)p->data == arr[4]);
 
     assert(getSize_LkList(&l)==5);
 
@@ -53,7 +51,7 @@ static void test_case_0()
     for(i=0; i<5; ++i)
     {
         p=getByOrd_LkList(&l, i+1);
-        assert(*(int*)p->value_point == i+1);
+        assert(*(int*)p->data == i+1);
     }
     p=getByOrd_LkList(&l, 0);
     assert(p==NULL);
@@ -64,7 +62,7 @@ static void test_case_0()
     for(i=0; i<5; ++i)
     {
         p=getByVal_LkList(&l, &arr[i], compare);
-        assert(*(int*)p->value_point == arr[i]);
+        assert(*(int*)p->data == arr[i]);
     }
     p=getByVal_LkList(&l, &a, compare);  //a==0
     assert(p==NULL);
@@ -93,8 +91,8 @@ static void test_case_0()
     //clear
     for(i=0; i<1024; ++i)
     {
-        p=insert_LkList(&l, l.tail, &a);
-        assert(*(int*)p->value_point == a);
+        p=insert_LkList(&l, l.guard, &a);
+        assert(*(int*)p->data == a);
     }
     assert(getSize_LkList(&l)==1024);
     clear_LkList(&l);
@@ -103,8 +101,8 @@ static void test_case_0()
     //destroy
     destroy_LkList(&l);
     assert(l.size == 0);
-    assert(l.head == NULL);
-    assert(l.tail == NULL);
+    assert(l.guard.next == &l.guard);
+    assert(l.guard.prev == &l.guard);
 
     return;
 }
@@ -116,7 +114,7 @@ static void test_case_1()
     int arr[5]={1, 2, 3, 4, 5};
     int i=0;
     void *v=NULL;
-    LkListElement *p=NULL;
+    LkListNode *p=NULL;
 
     //init
     init_LkList(&l);
@@ -125,14 +123,14 @@ static void test_case_1()
     for(i=0; i<5; ++i)
     {
         p=pushBack_LkList(&l, &arr[i]);
-        assert(*(int*)p->value_point == arr[i]);
+        assert(*(int*)p->data == arr[i]);
     }
     assert(getSize_LkList(&l) == 5);
 
     //getFirst, getNext
     for(i=0, p=getFirst_LkList(&l); p!=NULL; ++i, p=getNext_LkList(&l, p))
     {
-        assert(*(int*)p->value_point == arr[i]);
+        assert(*(int*)p->data == arr[i]);
     }
     assert(i == 5);
 
@@ -159,7 +157,7 @@ static void test_case_2()
     int arr[5]={5, 4, 3, 2, 1};
     int i=0;
     void *v=NULL;
-    LkListElement *p=NULL;
+    LkListNode *p=NULL;
 
     //init
     init_LkList(&l);
@@ -168,14 +166,14 @@ static void test_case_2()
     for(i=0; i<5; ++i)
     {
         p=pushFront_LkList(&l, &arr[i]);
-        assert(*(int*)p->value_point == arr[i]);
+        assert(*(int*)p->data == arr[i]);
     }
     assert(getSize_LkList(&l) == 5);
 
     //getLast, getPrev
     for(i=0, p=getLast_LkList(&l); p!=NULL; ++i, p=getPrev_LkList(&l, p))
     {
-        assert(*(int*)p->value_point == arr[i]);
+        assert(*(int*)p->data == arr[i]);
     }
     assert(i == 5);
 
@@ -200,15 +198,15 @@ static TraverseAction_LkList handler(void *value_point)
     switch(*(int*)value_point)
     {
         case 1:
-            return DELETE_ELEMENT_LKLIST;
+            return LKLIST_DELETE_NODE;
         case 2:
-            return DO_NOTHING_LKLIST;
+            return LKLIST_CONTINUE;
         case 3:
-            return DELETE_ELEMENT_LKLIST;
+            return LKLIST_DELETE_NODE;
         case 4:
-            return DO_NOTHING_LKLIST;
+            return LKLIST_CONTINUE;
         case 5:
-            return DELETE_ELEMENT_LKLIST;
+            return LKLIST_DELETE_NODE;
         defalut:
             assert(false);
     }
@@ -220,7 +218,7 @@ static void test_case_3()
     LkList l;
     int arr[5]={1, 2, 3, 4, 5};
     int i=0;
-    LkListElement *p=NULL;
+    LkListNode *p=NULL;
 
     //init
     init_LkList(&l);
@@ -229,7 +227,7 @@ static void test_case_3()
     for(i=0; i<5; ++i)
     {
         p=pushBack_LkList(&l, &arr[i]);
-        assert(*(int*)p->value_point == arr[i]);
+        assert(*(int*)p->data == arr[i]);
     }
     assert(getSize_LkList(&l) == 5);
 
@@ -241,13 +239,13 @@ static void test_case_3()
     assert(p==NULL);
 
     p=getByVal_LkList(&l, &arr[1], compare);
-    assert(*(int*)p->value_point == arr[1]);
+    assert(*(int*)p->data == arr[1]);
 
     p=getByVal_LkList(&l, &arr[2], compare);
     assert(p==NULL);
 
     p=getByVal_LkList(&l, &arr[3], compare);
-    assert(*(int*)p->value_point == arr[3]);
+    assert(*(int*)p->data == arr[3]);
 
     p=getByVal_LkList(&l, &arr[4], compare);
     assert(p==NULL);
